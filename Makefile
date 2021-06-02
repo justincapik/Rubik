@@ -3,7 +3,8 @@ NAME = 			Rubik
 OBJ_DIR  =		./obj/
 
 SRC_DIR =	./src/
-SRC = 		main.cpp
+SRC = 		main.cpp \
+			Rotate.class.cpp
 
 SRCS      =	$(addprefix $(SRC_DIR), $(SRC))
 
