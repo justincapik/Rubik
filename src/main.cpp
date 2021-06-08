@@ -1,4 +1,5 @@
 #include "rubik.hpp"
+#include <bitset>
 
 void	print()
 {
@@ -12,6 +13,17 @@ int		main(void)
 	r.AddFunction("AH", &print);
 	r.ApplyRotation("AH");
 	r.ApplyRotation("HM");
-	std::cout << "HELLO\n";
+
+	BitCube creator;	
+	int *cube = creator.create_cube();
+	cube[0] = 0xff;
+	creator.print_cube(cube);
+
+
+	cube = creator.Urot(cube);
+	
+	printf("\n\n");
+	creator.print_cube(cube);
+
 	return (0);
 }

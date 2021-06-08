@@ -4,7 +4,8 @@ OBJ_DIR  =		./obj/
 
 SRC_DIR =	./src/
 SRC = 		main.cpp \
-			Rotate.class.cpp
+		Rotate.class.cpp \
+		BitCube.class.cpp
 
 SRCS      =	$(addprefix $(SRC_DIR), $(SRC))
 
@@ -27,6 +28,7 @@ $(NAME): $(OBJ)
 
 clean:
 	@rm -f $(OBJ)
+	@rm -rf $(OBJ_DIR)
 	@printf "clean  [done]\n"
 
 fclean: clean

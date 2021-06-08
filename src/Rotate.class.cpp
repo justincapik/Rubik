@@ -14,13 +14,18 @@ bool    Rotate::AddFunction(string dir, void (*foo)())
 
 	for (int i = 0; i < dir.size(); ++i)
 		index += (int)dir[i];
-    if (index == 0)
+	if (index == 0)
 	{
 		std::cerr << "invalide string added to rotate table\n";
 		return false;
 	}
+	if (this->table[index] != NULL)
+	{
+		dprintf(2, "index %d for %s in Rotate table already taken\n", index, dir.c_str());
+		exit(-1);
+	}
 	this->table[index] = foo;
-    return true;
+	return true;
 }
 
 bool    Rotate::ApplyRotation(string dir)
