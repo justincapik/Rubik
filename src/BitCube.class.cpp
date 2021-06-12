@@ -1,5 +1,7 @@
 #include "rubik.hpp"
 
+#include <bitset>
+
 BitCube::BitCube() {}
 BitCube::~BitCube() {}
 
@@ -34,6 +36,18 @@ static string            gc(int v)
 	ss >> ret;
 
 	return (ret);
+}
+
+static void		print_side_str(int side)
+{
+	printf("%s", gc((side & 0xf0000000) >> 7 * 4).c_str());
+	printf("%s", gc((side & 0x0f000000) >> 6 * 4).c_str());
+	printf("%s", gc((side & 0x00f00000) >> 5 * 4).c_str());
+	printf("%s", gc((side & 0x000f0000) >> 4 * 4).c_str());
+	printf("%s", gc((side & 0x0000f000) >> 3 * 4).c_str());
+	printf("%s", gc((side & 0x00000f00) >> 2 * 4).c_str());
+	printf("%s", gc((side & 0x000000f0) >> 1 * 4).c_str());
+	printf("%s", gc((side & 0x0000000f) >> 0 * 4).c_str());
 }
 
 //  1 2 3
@@ -133,10 +147,9 @@ void            BitCube::print_cube(int *cube)
 			gc((cube[5] & 0x000f000) >> 3 * 4).c_str());
 	// YELLOW SIDE
 
+	printf("\n");
 
 }
-
-#include <bitset>
 
 int		*swap_stickers(int *cube, int s1, int n1, int s2, int n2, int distance)
 {
@@ -144,13 +157,43 @@ int		*swap_stickers(int *cube, int s1, int n1, int s2, int n2, int distance)
 
 	if (distance < 0)
 	{
+		printf("dist = %d\n");
+		std::bitset<32> a(cube[s1]);
+		std::bitset<32> b(cube[s2]);
+		std::cout << "s1 => " << a << "\ns2 => " << b << "\n";
 		cube[s1] += - (cube[s1] & n1) +((cube[s2] & n2) << (-distance * 4));
 		cube[s2] += - (cube[s2] & n2) + (tmp >> (-distance * 4));
 	}
 	else
 	{
-		cube[s1] += - (cube[s1] & n1) +((cube[s2] & n2) >> (distance * 4));
+		std::bitset<32> n(n1);
+		std::bitset<32> m(n2);
+		cout << " n1 = " << n << ",  n2 = " << m << "\n";
+		//printf("dist = %d, n1 = %d, n2 = %d\n", distance, n1, n2);
+		
+		print_side_str(cube[s2]);
+		printf("\n");
+		print_side_str(cube[s1]);
+		printf("\n");
+		
+		std::bitset<32> a(cube[s1]);
+		std::bitset<32> b(cube[s2]);
+		std::cout << "s1 => " << a << ", s2 => " << b << "\n";
+
+		std::bitset<32> op((- (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4))));
+		cout << "op = " << op << "\n";
+		std::bitset<32> op2((- (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4))) & n2 );
+		cout << "op = " << op2 << "\n";
+
+		cube[s1] += - (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4));
 		cube[s2] += - (cube[s2] & n2) + (tmp << (distance * 4));
+		std::bitset<32> c(cube[s1]);
+		std::bitset<32> d(cube[s2]);
+		std::cout << "s1 => " << c << ", s2 => " << d << "\n";
+			
+		print_side_str(cube[s1]);
+		printf("\n");
+
 	}
 
 	return (cube);
@@ -254,6 +297,7 @@ int		*BitCube::Urot(int *cube)
 }
 // U Rotations
 
+/*
 // D Rotations
 int		*BitCube::DArot(int *cube)
 {
@@ -291,7 +335,6 @@ int		*BitCube::DArot(int *cube)
 
 	return (cube);
 }
-
 int		*BitCube::Drot(int *cube)
 {
 	int face = cube[0];
@@ -327,7 +370,7 @@ int		*BitCube::Drot(int *cube)
 
 	return (cube);
 }
-
+*/
 
 
 
