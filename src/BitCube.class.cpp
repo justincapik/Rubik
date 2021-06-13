@@ -166,6 +166,15 @@ int		*swap_stickers(int *cube, int s1, int n1, int s2, int n2, int distance)
 	}
 	else
 	{
+		if (cube[s2] < 0)
+		{
+			cube[s2] *= -1;
+			int tmp2 = (cube[s2] & n2) >> (distance * 4);
+			tmp2 |= 0x8000;
+			cube[s1] += - (cube[s1] & n1) + tmp2;
+			cube[s2] += - (cube[s2] & n2) + (tmp << (distance * 4));
+		}
+		
 		std::bitset<32> n(n1);
 		std::bitset<32> m(n2);
 		cout << " n1 = " << n << ",  n2 = " << m << "\n";
@@ -180,10 +189,14 @@ int		*swap_stickers(int *cube, int s1, int n1, int s2, int n2, int distance)
 		std::bitset<32> b(cube[s2]);
 		std::cout << "s1 => " << a << ", s2 => " << b << "\n";
 
-		std::bitset<32> op((- (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4))));
+		std::bitset<32> op(cube[s2] & n2);
 		cout << "op = " << op << "\n";
-		std::bitset<32> op2((- (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4))) & n2 );
+		std::bitset<32> op2((((cube[s2] & n2) >> (distance * 4))) );
 		cout << "op = " << op2 << "\n";
+		std::bitset<32> op3((cube[s1] & n1));
+		cout << "op = " << op3 << "\n";
+		std::bitset<32> op4(( - (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4))) );
+		cout << "op = " << op4 << "\n";
 
 		cube[s1] += - (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4));
 		cube[s2] += - (cube[s2] & n2) + (tmp << (distance * 4));
