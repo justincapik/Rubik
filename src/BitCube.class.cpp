@@ -5,9 +5,9 @@
 BitCube::BitCube() {}
 BitCube::~BitCube() {}
 
-int             *BitCube::create_cube()
+unsigned int             *BitCube::create_cube()
 {
-	int *cube = new int[6];
+	unsigned int *cube = new unsigned int[6];
 
 	cube[0] = 0x00000000; // WHITE
 	cube[1] = 0x11111111; // GREEN
@@ -19,7 +19,7 @@ int             *BitCube::create_cube()
 	return cube;
 }
 
-static string            gc(int v)
+static string            gc(unsigned int v)
 {
 	string ret = "";
 
@@ -38,7 +38,7 @@ static string            gc(int v)
 	return (ret);
 }
 
-static void		print_side_str(int side)
+static void		print_side_str(unsigned int side)
 {
 	printf("%s", gc((side & 0xf0000000) >> 7 * 4).c_str());
 	printf("%s", gc((side & 0x0f000000) >> 6 * 4).c_str());
@@ -54,7 +54,7 @@ static void		print_side_str(int side)
 //  8   4
 //  7 6 5
 
-void            BitCube::print_cube(int *cube)
+void            BitCube::print_cube(unsigned int *cube)
 {
 
 	// RED SIDE
@@ -151,9 +151,10 @@ void            BitCube::print_cube(int *cube)
 
 }
 
-int		*swap_stickers(int *cube, int s1, int n1, int s2, int n2, int distance)
+unsigned int		*swap_stickers(unsigned int *cube, unsigned int s1,
+	unsigned int n1, unsigned int s2, unsigned int n2, unsigned int distance)
 {
-	int tmp = cube[s1] & n1;
+	unsigned int tmp = cube[s1] & n1;
 
 	if (distance < 0)
 	{
@@ -166,56 +167,69 @@ int		*swap_stickers(int *cube, int s1, int n1, int s2, int n2, int distance)
 	}
 	else
 	{
+		/*
 		if (cube[s2] < 0)
 		{
-			cube[s2] *= -1;
-			int tmp2 = (cube[s2] & n2) >> (distance * 4);
+			print_side_str(cube[s2]);
+			printf("\n");
+			print_side_str(cube[s1]);
+			printf("\n");
+
+			std::bitset<32> n(n1);
+			std::bitset<32> m(n2);
+			cout << " n1 = " << n << ",  n2 = " << m << "\n";
+			//printf("dist = %d, n1 = %d, n2 = %d\n", distance, n1, n2);
+
+			std::bitset<32> a(cube[s1]);
+			std::bitset<32> b(cube[s2]);
+			std::cout << "s1 => " << a << ", s2 => " << b << "\n";
+
+			unsigned int side = cube[s2];
+			unsigned int tmp2 = (cube[s2] & n2) >> (distance * 4);
+
+			std::bitset<32> opm1(cube[s2] & n2);
+			cout << "op = " << opm1 << "\n";
+			std::bitset<32> op(cube[s2]);
+			cout << "op = " << op << "\n";
+			std::bitset<32> op2(tmp2);
+			cout << "op = " << op2 << "\n";
 			tmp2 |= 0x8000;
-			cube[s1] += - (cube[s1] & n1) + tmp2;
+			std::bitset<32> op3(tmp2);
+			cout << "op = " << op3 << "\n";
+			std::bitset<32> op4((cube[s1] & n1));
+			cout << "op = " << op4 << "\n";
+			std::bitset<32> op5(( - (cube[s1] & n1) + tmp2) & n1);
+			cout << "op = " << op5 << "\n";
+
+			cube[s1] += (- (cube[s1] & n1) + tmp2) & n1;
 			cube[s2] += - (cube[s2] & n2) + (tmp << (distance * 4));
+
+			std::bitset<32> c(cube[s1]);
+			std::bitset<32> d(cube[s2]);
+			std::cout << "s1 => " << c << ", s2 => " << d << "\n";
+
+			print_side_str(cube[s1]);
+			printf("\n");
 		}
-		
-		std::bitset<32> n(n1);
-		std::bitset<32> m(n2);
-		cout << " n1 = " << n << ",  n2 = " << m << "\n";
-		//printf("dist = %d, n1 = %d, n2 = %d\n", distance, n1, n2);
-		
-		print_side_str(cube[s2]);
-		printf("\n");
-		print_side_str(cube[s1]);
-		printf("\n");
-		
-		std::bitset<32> a(cube[s1]);
-		std::bitset<32> b(cube[s2]);
-		std::cout << "s1 => " << a << ", s2 => " << b << "\n";
-
-		std::bitset<32> op(cube[s2] & n2);
-		cout << "op = " << op << "\n";
-		std::bitset<32> op2((((cube[s2] & n2) >> (distance * 4))) );
-		cout << "op = " << op2 << "\n";
-		std::bitset<32> op3((cube[s1] & n1));
-		cout << "op = " << op3 << "\n";
-		std::bitset<32> op4(( - (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4))) );
-		cout << "op = " << op4 << "\n";
-
-		cube[s1] += - (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4));
-		cube[s2] += - (cube[s2] & n2) + (tmp << (distance * 4));
-		std::bitset<32> c(cube[s1]);
-		std::bitset<32> d(cube[s2]);
-		std::cout << "s1 => " << c << ", s2 => " << d << "\n";
-			
-		print_side_str(cube[s1]);
-		printf("\n");
+		else
+		{
+			*/
+			cube[s1] += - (cube[s1] & n1) + ((cube[s2] & n2) >> (distance * 4));
+			cube[s2] += - (cube[s2] & n2) + (tmp << (distance * 4));
+		//}
 
 	}
+			std::bitset<32> c(cube[s1]);
+			std::bitset<32> d(cube[s2]);
+			std::cout << "s1 => " << c << ", s2 => " << d << "\n";
 
 	return (cube);
 }
 
 // U Rotations
-int		*BitCube::UArot(int *cube)
+unsigned int		*BitCube::UArot(unsigned int *cube)
 {
-	int face = cube[0];
+	unsigned int face = cube[0];
 
 	asm volatile ("rol $8, %[face]" : [face] "+r" (face) : );	
 
@@ -226,16 +240,16 @@ int		*BitCube::UArot(int *cube)
 	//    f4
 	//    N
 
-	int f1 = 1;
-	int f2 = 2;
-	int f3 = 3;
-	int f4 = 4;
+	unsigned int f1 = 1;
+	unsigned int f2 = 2;
+	unsigned int f3 = 3;
+	unsigned int f4 = 4;
 
 	// green/red swap
 	swap_stickers(cube, f1, ONE, f2, SEVEN, 1 - 7);
 	swap_stickers(cube, f1, EIGHT, f2, SIX, 8 - 6);
 	swap_stickers(cube, f1, SEVEN, f2, FIVE, 7 - 5);
-	
+
 	this->print_cube(cube);
 
 	// blue/orange swap
@@ -245,14 +259,14 @@ int		*BitCube::UArot(int *cube)
 
 	this->print_cube(cube);
 
-//  2   R
-// 301 BWG
-//  4   O
-//  5   Y
+	//  2   R
+	// 301 BWG
+	//  4   O
+	//  5   Y
 
-//  1 2 3
-//  8   4
-//  7 6 5
+	//  1 2 3
+	//  8   4
+	//  7 6 5
 	printf("starting last swap\n");
 	// Green(now red)/Blue(now orange)	
 	swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
@@ -262,20 +276,24 @@ int		*BitCube::UArot(int *cube)
 	printf("after 4 - 8 swap\n");
 	this->print_cube(cube);
 	std::bitset<32> blue(cube[3]);
-	std::bitset<32> green(cube[3]);
-	std::cout << blue << " " << green << "\n";
+	std::bitset<32> green(cube[1]);
+	std::cout << "bl => " << blue << ", gr => " << green << "\n";
+
+
 	swap_stickers(cube, f3, FIVE, f1, ONE, 5 - 1);
+
+
 	std::bitset<32> blue1(cube[3]);
-	std::bitset<32> green1(cube[3]);
-	std::cout << blue1 << " " << green1 << "\n";
+	std::bitset<32> green1(cube[1]);
+	std::cout << "bl => " << blue1 << ", gr => " << green1 << "\n";
 	printf("after 5 - 1 swap\n");
 
 
 	return (cube);
 }
-int		*BitCube::Urot(int *cube)
+unsigned int		*BitCube::Urot(unsigned int *cube)
 {
-	int face = cube[0];
+	unsigned int face = cube[0];
 
 	asm volatile ("rol $24, %[face]" : [face] "+r" (face) : );	
 
@@ -286,10 +304,10 @@ int		*BitCube::Urot(int *cube)
 	//    f4
 	//    N
 
-	int f1 = 1;
-	int f2 = 2;
-	int f3 = 3;
-	int f4 = 4;
+	unsigned int f1 = 1;
+	unsigned int f2 = 2;
+	unsigned int f3 = 3;
+	unsigned int f4 = 4;
 
 	// green/red swap
 	swap_stickers(cube, f1, ONE, f4, THREE, 1 - 3);
@@ -312,76 +330,76 @@ int		*BitCube::Urot(int *cube)
 
 /*
 // D Rotations
-int		*BitCube::DArot(int *cube)
+unsigned int		*BitCube::DArot(unsigned int *cube)
 {
-	int face = cube[0];
+unsigned int face = cube[0];
 
-	asm volatile ("rol $8, %[face]" : [face] "+r" (face) : );	
+asm volatile ("rol $8, %[face]" : [face] "+r" (face) : );	
 
-	cube[5] = face;
+cube[5] = face;
 
-	//    f2
-	// f3 N f1
-	//    f4
-	//    N
+//    f2
+// f3 N f1
+//    f4
+//    N
 
-	int f1 = 3;
-	int f2 = 2;
-	int f3 = 1;
-	int f4 = 4;
+unsigned int f1 = 3;
+unsigned int f2 = 2;
+unsigned int f3 = 1;
+unsigned int f4 = 4;
 
-	// green/red swap
-	swap_stickers(cube, f1, ONE, f2, SEVEN, 1 - 7);
-	swap_stickers(cube, f1, EIGHT, f2, SIX, 8 - 6);
-	swap_stickers(cube, f1, SEVEN, f2, FIVE, 7 - 5);
+// green/red swap
+swap_stickers(cube, f1, ONE, f2, SEVEN, 1 - 7);
+swap_stickers(cube, f1, EIGHT, f2, SIX, 8 - 6);
+swap_stickers(cube, f1, SEVEN, f2, FIVE, 7 - 5);
 
-	// blue/orange swap
-	swap_stickers(cube, f3, FIVE, f4, THREE, 5 - 3);
-	swap_stickers(cube, f3, FOUR, f4, TWO, 4 - 2);
-	swap_stickers(cube, f3, THREE, f4, ONE, 3 - 1);
+// blue/orange swap
+swap_stickers(cube, f3, FIVE, f4, THREE, 5 - 3);
+swap_stickers(cube, f3, FOUR, f4, TWO, 4 - 2);
+swap_stickers(cube, f3, THREE, f4, ONE, 3 - 1);
 
-	// Green(now red)/Blue(now orange)	
-	swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
-	swap_stickers(cube, f3, FOUR, f1, EIGHT, 4 - 8);
-	swap_stickers(cube, f3, FIVE, f1, ONE, 5 - 1);
+// Green(now red)/Blue(now orange)	
+swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
+swap_stickers(cube, f3, FOUR, f1, EIGHT, 4 - 8);
+swap_stickers(cube, f3, FIVE, f1, ONE, 5 - 1);
 
 
-	return (cube);
+return (cube);
 }
-int		*BitCube::Drot(int *cube)
+unsigned int		*BitCube::Drot(unsigned int *cube)
 {
-	int face = cube[0];
+unsigned int face = cube[0];
 
-	asm volatile ("rol $24, %[face]" : [face] "+r" (face) : );	
+asm volatile ("rol $24, %[face]" : [face] "+r" (face) : );	
 
-	cube[0] = face;
+cube[0] = face;
 
-	//    f2
-	// f3 N f1
-	//    f4
-	//    N
+//    f2
+// f3 N f1
+//    f4
+//    N
 
-	int f1 = 1;
-	int f2 = 2;
-	int f3 = 3;
-	int f4 = 4;
+unsigned int f1 = 1;
+unsigned int f2 = 2;
+unsigned int f3 = 3;
+unsigned int f4 = 4;
 
-	// green/red swap
-	swap_stickers(cube, f1, ONE, f4, THREE, 1 - 3);
-	swap_stickers(cube, f1, EIGHT, f4, TWO, 8 - 2);
-	swap_stickers(cube, f1, SEVEN, f4, ONE, 7 - 1);
+// green/red swap
+swap_stickers(cube, f1, ONE, f4, THREE, 1 - 3);
+swap_stickers(cube, f1, EIGHT, f4, TWO, 8 - 2);
+swap_stickers(cube, f1, SEVEN, f4, ONE, 7 - 1);
 
-	// blue/orange swap
-	swap_stickers(cube, f3, FIVE, f2, SEVEN, 5 - 7);
-	swap_stickers(cube, f3, FOUR, f2, SIX, 4 - 6);
-	swap_stickers(cube, f3, THREE, f2, FIVE, 3 - 5);
+// blue/orange swap
+swap_stickers(cube, f3, FIVE, f2, SEVEN, 5 - 7);
+swap_stickers(cube, f3, FOUR, f2, SIX, 4 - 6);
+swap_stickers(cube, f3, THREE, f2, FIVE, 3 - 5);
 
-	// Green(now orange)/Blue(now red)	
-	swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
-	swap_stickers(cube, f3, FOUR, f1, EIGHT, 4 - 8);
-	swap_stickers(cube, f3, FIVE, f1, ONE, 5 - 1);
+// Green(now orange)/Blue(now red)	
+swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
+swap_stickers(cube, f3, FOUR, f1, EIGHT, 4 - 8);
+swap_stickers(cube, f3, FIVE, f1, ONE, 5 - 1);
 
-	return (cube);
+return (cube);
 }
 */
 

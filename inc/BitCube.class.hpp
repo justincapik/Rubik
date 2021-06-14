@@ -12,30 +12,30 @@ class BitCube
 		BitCube();
 		~BitCube();
 	
-		int	*create_cube();
-		int	*copy_cube();
-		void	print_cube(int *cube);	
+		unsigned int	*create_cube();
+		unsigned int	*copy_cube();
+		void	print_cube(unsigned int *cube);	
 
-		int	*Urot(int *cube);
-		int	*UArot(int *cube);
-		int	*Drot(int *cube);
-		int	*DArot(int *cube);
-		int	*Rrot(int *cube);
-		int	*RArot(int *cube);
-		int	*Lrot(int *cube);
-		int	*LArot(int *cube);
-		int	*Frot(int *cube);
-		int	*FArot(int *cube);
-		int	*Brot(int *cube);
-		int	*BArot(int *cube);
+		unsigned int	*Urot(unsigned int *cube);
+		unsigned int	*UArot(unsigned int *cube);
+		unsigned int	*Drot(unsigned int *cube);
+		unsigned int	*DArot(unsigned int *cube);
+		unsigned int	*Rrot(unsigned int *cube);
+		unsigned int	*RArot(unsigned int *cube);
+		unsigned int	*Lrot(unsigned int *cube);
+		unsigned int	*LArot(unsigned int *cube);
+		unsigned int	*Frot(unsigned int *cube);
+		unsigned int	*FArot(unsigned int *cube);
+		unsigned int	*Brot(unsigned int *cube);
+		unsigned int	*BArot(unsigned int *cube);
 
 		// later?
-		int	*urot(int *cube);
-		int	*rrot(int *cube);
-		int	*frot(int *cube);
-		int	*drot(int *cube);
-		int	*lrot(int *cube);
-		int	*brot(int *cube);
+		unsigned int	*urot(unsigned int *cube);
+		unsigned int	*rrot(unsigned int *cube);
+		unsigned int	*frot(unsigned int *cube);
+		unsigned int	*drot(unsigned int *cube);
+		unsigned int	*lrot(unsigned int *cube);
+		unsigned int	*brot(unsigned int *cube);
 };
 
 

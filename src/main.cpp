@@ -15,14 +15,16 @@ int		main(void)
 	r.ApplyRotation("HM");
 
 	BitCube creator;	
-	int *cube = creator.create_cube();
+	unsigned int *cube = creator.create_cube();
 
+	/*
 	cube[0] |= 0x00f000f0;
 	cube[1] |= 0x00f000f0;
 	cube[2] |= 0x00f000f0;
 	cube[3] |= 0x00f000f0;
 	cube[4] |= 0x00f000f0;
 	cube[5] |= 0x00f000f0;
+	*/
 
 	creator.print_cube(cube);
 
