@@ -3,46 +3,100 @@
 
 void	print()
 {
-	cout << "test\n";
+	//cout << "test\n";
 }
 
-int		main(void)
+int	*fnull(int *c)
 {
+	(void)c;
+	return NULL;
+}
+
+int		main(int argc, char **argv)
+{
+	BitCube creator;	
+	int *cube = creator.create_cube();
+	
 	Rotate r;
 
-	r.AddFunction("AH", &print);
-	r.ApplyRotation("AH");
-	r.ApplyRotation("HM");
+	r.AddFunction("U", &(BitCube::Urot));
+	r.AddFunction("U'", &(BitCube::UArot));
+	r.AddFunction("R", &(BitCube::Rrot));
+	r.AddFunction("R'", &(BitCube::RArot));
+	r.AddFunction("D", &(BitCube::Drot));
+	r.AddFunction("D'", &(BitCube::DArot));
+	r.AddFunction("N", &(fnull));
+	//r.ApplyRotation("AH", cube);
+	//r.ApplyRotation("HM", cube);
 
-	BitCube creator;	
-	unsigned int *cube = creator.create_cube();
 
-	/*
-	cube[0] |= 0x00f000f0;
-	cube[1] |= 0x00f000f0;
-	cube[2] |= 0x00f000f0;
-	cube[3] |= 0x00f000f0;
-	cube[4] |= 0x00f000f0;
-	cube[5] |= 0x00f000f0;
-	*/
-
+	if (argc > 1 && argv[1][0] == 'd')
+	{
+		cube[0] |= 0x00f000f0;
+		cube[1] |= 0x00f000f0;
+		cube[2] |= 0x00f000f0;
+		cube[3] |= 0x00f000f0;
+		cube[4] |= 0x00f000f0;
+		cube[5] |= 0x00f000f0;
+	}
 	creator.print_cube(cube);
 
 	/*
 	cube = creator.Urot(cube);
-	printf("\n");
+	printf("U rotation\n");
 	creator.print_cube(cube);
-	*/
 
 	cube = creator.UArot(cube);
-	printf("\n");
+	printf("U' rotation\n");
 	creator.print_cube(cube);
 
-	/*
+	cube = creator.Drot(cube);
+	printf("D rotation\n");
+	creator.print_cube(cube);
+	
 	cube = creator.DArot(cube);
-	printf("\n");
+	printf("D' rotation\n");
+	creator.print_cube(cube);
+	
+	cube = r.ApplyRotation("R", cube);
+	printf("R rotation\n");
+	creator.print_cube(cube);
+	
+	cube = r.ApplyRotation("R'", cube);
+	printf("R' rotation\n");
 	creator.print_cube(cube);
 	*/
+	
+	cube = r.ApplyRotation("R'", cube);
+	printf("R' rotation\n");
+	cube = r.ApplyRotation("U'", cube);
+	printf("U' rotation\n");
+	cube = r.ApplyRotation("U'", cube);
+	printf("U' rotation\n");
+	cube = r.ApplyRotation("D'", cube);
+	printf("D' rotation\n");
+	cube = r.ApplyRotation("D'", cube);
+	printf("D' rotation\n");
+	cube = r.ApplyRotation("R'", cube);
+	printf("R' rotation\n");
+	/*
+	cube = r.ApplyRotation("D", cube);
+	printf("D rotation\n");
+	*/
 
+	creator.print_cube(cube);
+
+	Solver s;
+	single_rot *solution = s.solve(cube, r);
+
+	single_rot *cpy = solution;
+	printf("solution = { ");
+	while (cpy->last != NULL)
+	{
+		printf("%s ", cpy->rot.c_str());
+		cpy = cpy->last;
+	}
+	printf("}\n");
+	
 	return (0);
 }

@@ -5,7 +5,8 @@ OBJ_DIR  =		./obj/
 SRC_DIR =	./src/
 SRC = 		main.cpp \
 		Rotate.class.cpp \
-		BitCube.class.cpp
+		BitCube.class.cpp \
+		Solver.class.cpp
 
 SRCS      =	$(addprefix $(SRC_DIR), $(SRC))
 

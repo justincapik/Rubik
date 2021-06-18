@@ -4,10 +4,12 @@
 #include<string>
 #include <iostream>
 #include <sstream>
+#include <vector>
 using namespace std;
 
 #include "Rotate.class.hpp"
 #include "BitCube.class.hpp"
+#include "Solver.class.hpp"
 
 enum COLOR {WHITE, GREEN, RED, BLUE, ORANGE, YELLOW};
 
