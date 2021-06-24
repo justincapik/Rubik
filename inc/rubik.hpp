@@ -1,17 +1,29 @@
 #ifndef __RUBIK_HPP__
 # define __RUBIK_HPP__
 
-#include<string>
+#include <string>
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <queue>
+#include <functional>
+
 using namespace std;
+enum COLOR {WHITE, GREEN, RED, BLUE, ORANGE, YELLOW};
+
+typedef struct single_rot single_rot;
+struct single_rot
+{
+	int		*cube;
+	int		value;
+	string		rot;
+	single_rot	*last;
+};
 
 #include "Rotate.class.hpp"
 #include "BitCube.class.hpp"
-#include "Solver.class.hpp"
-
-enum COLOR {WHITE, GREEN, RED, BLUE, ORANGE, YELLOW};
+#include "GraphSolver.class.hpp"
+#include "BinaryTree.class.hpp"
 
 #define ONE	0xf0000000
 #define TWO	0x0f000000

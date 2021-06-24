@@ -100,13 +100,14 @@ int		GraphSolver::simpleHeuristic(int *cube)
 
 int		GraphSolver::manhattanHeuristic(int *cube)
 {
+	
 	return (0);
 }
 
 bool		GraphSolver::check_admissible_cube(int *cube, single_rot *current)
 {	
-	//if (
-	// BINARY TREE FOR CLOSED LIST
+	if (this->closed_list.search(cube) == NULL)
+		return false;
 	return true;
 }
 
@@ -121,7 +122,6 @@ single_rot	*GraphSolver::solve(int *cube, Rotate r)
 	int states = 0;
 
 	while (this->check_solved(current->cube) != true)
-	//for (int j = 0; j < 5; ++j)
 	{
 		current = this->open_list.top();
 		this->open_list.pop();
@@ -131,26 +131,19 @@ single_rot	*GraphSolver::solve(int *cube, Rotate r)
 			// -1 because the last entry doesn't work
 		{
 			int *newcube = r.ApplyRotation(poss_rots[i], current->cube);
-			if (this->closed_list.search(newcube) == NULL)
-			{
-				printf("-----------------------------------\n");
-				printf("-----------IT WORKED---------------\n");
-				printf("-----------------------------------\n");
-				continue;
-			}
-			this->open_list.push(new (single_rot)
-				{newcube, this->simpleHeuristic(newcube), poss_rots[i], current});
+			if (check_admissible_cube(newcube, current))
+				this->open_list.push(new (single_rot)
+					{newcube, this->simpleHeuristic(newcube),
+					poss_rots[i], current});
 		}
 
 		this->closed_list.insert(current->cube);
 		states++;
-		//printf("current's value = %d\n", current->value);
+		printf("current's value = %d - %d\n", current->value, states);
 		//creator.print_cube(current->cube);
-		//getchar();
 	}
 
 	printQueue(this->open_list);
-	//creator.print_cube(current->cube);
 	printf("SOLUTION\n");
 	single_rot *t;
 	for (t = current; t->last != NULL; t = t->last)
@@ -164,8 +157,4 @@ single_rot	*GraphSolver::solve(int *cube, Rotate r)
 	printf("%d states explored\n", states);
 
 	return current;
-
-
-
-
 }
