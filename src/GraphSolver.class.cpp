@@ -2,8 +2,10 @@
 
 GraphSolver::GraphSolver()
 {
+	/*
 	this->open_list = {};
 	this->closed_list = {};
+	*/
 }
 
 template<class T>
@@ -88,12 +90,12 @@ int		GraphSolver::simpleHeuristic(int *cube)
 		sum += (v & 1);
 		v = v >> 1;
 	}
+	v = cube[5] ^ 0x55555555;
 	for (int i = 0; i < 8 * 4; ++i)
 	{
 		sum += (v & 1);
 		v = v >> 1;
 	}
-		+ cube[5] ^ 0x55555555;
 
 	return sum;
 }
@@ -114,8 +116,7 @@ bool		GraphSolver::check_admissible_cube(int *cube, single_rot *current)
 single_rot	*GraphSolver::solve(int *cube, Rotate r)
 {
 	BitCube creator;
-	single_rot		*current = new (single_rot){cube,
-		this->simpleHeuristic(cube), "ORIGINAL", NULL};
+	single_rot		*current = new single_rot(cube, this->simpleHeuristic(cube), "ORIGINAL", NULL);
 
 	this->open_list.push(current);
 
@@ -130,17 +131,22 @@ single_rot	*GraphSolver::solve(int *cube, Rotate r)
 		for (int i = 0; i < r.get_poss_it() - 1; ++i)
 			// -1 because the last entry doesn't work
 		{
-			int *newcube = r.ApplyRotation(poss_rots[i], current->cube);
+			int			*newcube = r.ApplyRotation(poss_rots[i], current->cube);
 			if (check_admissible_cube(newcube, current))
-				this->open_list.push(new (single_rot)
-					{newcube, this->simpleHeuristic(newcube),
-					poss_rots[i], current});
+			{
+				single_rot	*newrot = new single_rot(newcube,
+						this->simpleHeuristic(newcube), poss_rots[i], current);
+				this->open_list.push(newrot);
+			}
 		}
 
 		this->closed_list.insert(current->cube);
 		states++;
-		printf("current's value = %d - %d\n", current->value, states);
-		//creator.print_cube(current->cube);
+		if (states % 100000 == 0)
+		{
+			printf("current's value = %d - %d\n", current->value, states);
+			creator.print_cube(current->cube);
+		}
 	}
 
 	printQueue(this->open_list);

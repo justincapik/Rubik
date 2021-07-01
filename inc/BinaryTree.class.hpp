@@ -1,13 +1,23 @@
 #ifndef BINARYTREE_HPP
 # define BINARYTREE_HPP
 
-typedef struct node node;
-struct node
+class node
 {
+	public:
 	int		*cube;
 	size_t		hash;
 	node		*right;
 	node		*left;
+	
+	node() {};
+	~node() {};
+	node(int *cube, size_t hash, node *right, node *left)
+	{
+		this->cube = cube;
+		this->hash = hash;
+		this->right = right;
+		this->left = left;
+	}
 };
 
 class BinaryTree

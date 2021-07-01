@@ -9,16 +9,31 @@ BinaryTree::~BinaryTree() {} //TODO
 
 int	BinaryTree::compare(node *c1, node *c2)
 {
+	/*
 	if (c1->hash == c2->hash)
 	{
 		for (int i = 0; i < 6; ++i)
 		{
 			if (c1->cube[i] != c2->cube[i])
-				return (c1->cube[i] - c2->cube[i]);
+			{
+				dprintf(2, "----------------------------------------------------------------------\n");
+				BitCube creator;
+				dprintf(2, "found the same hash but different\n");
+				dprintf(2, "c1 hash = %d\n", c1->hash);
+				creator.print_cube(c1->cube);
+				dprintf(2, "c2 hash = %d\n", c2->hash);
+				creator.print_cube(c2->cube);
+				dprintf(2, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+				*/
+				return (c1->cube[0] + c1->cube[1] + c1->cube[2] + c1->cube[3] + c1->cube[4] + c1->cube[5]
+					- (c2->cube[0] + c2->cube[1] + c2->cube[2] + c2->cube[3] + c2->cube[4] + c2->cube[5]));
+	/*	
+}
 		}
 		return (0);
 	}
 	return (c1->hash - c2->hash);
+*/
 }
 
 size_t	BinaryTree::cubehasher(int *cube)
@@ -32,7 +47,7 @@ size_t	BinaryTree::cubehasher(int *cube)
 
 bool	BinaryTree::insert(int *cube)
 {
-	node *newnode = new (node){cube, this->cubehasher(cube), NULL, NULL};
+	node *newnode = new node(cube, this->cubehasher(cube), NULL, NULL);
 
 	if (this->base == NULL)
 	{
@@ -66,7 +81,7 @@ bool	BinaryTree::insert(int *cube)
 
 node	*BinaryTree::search(int *cube)
 {
-	node newnode = {cube, this->cubehasher(cube), NULL, NULL};
+	node newnode = node(cube, this->cubehasher(cube), NULL, NULL);
 	node *current = this->base;
 	node *prev;
 

@@ -7,17 +7,29 @@
 #include <vector>
 #include <queue>
 #include <functional>
+#include <fstream>
 
 using namespace std;
 enum COLOR {WHITE, GREEN, RED, BLUE, ORANGE, YELLOW};
 
-typedef struct single_rot single_rot;
-struct single_rot
+//typedef struct single_rot single_rot;
+class single_rot
 {
-	int		*cube;
-	int		value;
-	string		rot;
-	single_rot	*last;
+	public:
+		int		*cube;
+		int		value;
+		string		rot;
+		single_rot	*last;
+
+		single_rot() {};
+		~single_rot() {};
+		single_rot(int *cube, int value, string rot, single_rot *last)
+		{
+			this->cube = cube;
+			this->value = value;
+			this->rot = rot;
+			this->last = last;
+		}
 };
 
 #include "Rotate.class.hpp"

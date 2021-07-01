@@ -17,8 +17,7 @@ class GraphSolver
 	private:
 
 	public:
-		std::priority_queue<single_rot*, std::vector<single_rot*>,
-			CustomCompare> open_list;
+		std::priority_queue<single_rot*, std::vector<single_rot*>, CustomCompare> open_list;
 		BinaryTree closed_list;
 		
 		GraphSolver();
