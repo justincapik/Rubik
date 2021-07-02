@@ -11,7 +11,7 @@ struct compnode
 	// first 24 bits are the corner numbers 3 bits for every corner number
 	// last 8 bits are for the "value" or number of moves to get to that position
 	unsigned int	index;
-}
+};
 
 class Hnode
 {
@@ -25,22 +25,26 @@ class Hnode
 
 		Hnode() {}
 		~Hnode() {}
-		Hnode(int *cube, int moves, Hnode *right, Hnode *left)
+		Hnode(int *cube, int moves, Hnode *right, Hnode *left, Hnode *parent, bool color)
 		{
 			this->cube = cube;
 			this->moves = moves;
 			this->right = right;
 			this->left = left;
+			this->parent = parent;
+			this->color = color;
 		}
 };
 
 class HeuristicTree
 {
 	private:
-		node	*base;
+		Hnode	*base;
 		int		convert_cube(int *cube, int moves);
 		void	rightTreeRot(Hnode *parent);
 		void	leftTreeRot(Hnode *parent);
+		void	adjustTree(Hnode *node, Hnode *child);
+		bool	checkAndAdjustColor(Hnode *node);
 
 	public:
 		bool	insert(int *cube, int moves);

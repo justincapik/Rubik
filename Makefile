@@ -7,7 +7,8 @@ SRC = 		main.cpp \
 		Rotate.class.cpp \
 		BitCube.class.cpp \
 		GraphSolver.class.cpp \
-		BinaryTree.class.cpp
+		BinaryTree.class.cpp \
+		HeuristicTree.class.cpp
 
 SRCS      =	$(addprefix $(SRC_DIR), $(SRC))
 

@@ -74,9 +74,9 @@ int		main(int argc, char **argv)
 	printf("R' rotation\n");
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
+	/*
 	   cube = r.ApplyRotation("U'", cube);
 	   printf("U' rotation\n");
-	/*
 	   cube = r.ApplyRotation("D'", cube);
 	   printf("D' rotation\n");
 	   cube = r.ApplyRotation("D'", cube);

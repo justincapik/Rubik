@@ -36,6 +36,7 @@ class single_rot
 #include "BitCube.class.hpp"
 #include "GraphSolver.class.hpp"
 #include "BinaryTree.class.hpp"
+#include "HeuristicTree.class.hpp"
 
 #define ONE	0xf0000000
 #define TWO	0x0f000000
