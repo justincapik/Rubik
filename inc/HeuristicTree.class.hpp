@@ -1,6 +1,18 @@
 #ifndef HEURISTICTREE_HPP
 # define HEURISTICTREE_HPP
 
+# define TRED true
+# define TBLACK false
+
+typedef struct compnode compnode;
+struct compnode
+{
+	unsigned int	data;
+	// first 24 bits are the corner numbers 3 bits for every corner number
+	// last 8 bits are for the "value" or number of moves to get to that position
+	unsigned int	index;
+}
+
 class Hnode
 {
 	public:
@@ -8,6 +20,8 @@ class Hnode
 		int		moves;
 		Hnode	*right;
 		Hnode	*left;	
+		Hnode	*parent;	
+		bool	color;
 
 		Hnode() {}
 		~Hnode() {}
@@ -24,15 +38,19 @@ class HeuristicTree
 {
 	private:
 		node	*base;
+		int		convert_cube(int *cube, int moves);
+		void	rightTreeRot(Hnode *parent);
+		void	leftTreeRot(Hnode *parent);
 
 	public:
 		bool	insert(int *cube, int moves);
 		node	*search(int *cube);
 		int		compare(Hnode *c1, Hnode *c2);
+		int		comparecompact(Hnode *c1, Hnode *c2);
 
 		int		writeTree();
 		void	*readTree();
-		int		getTreeData(
+		int		getTreeData(void *tree, int *cube);
 		
 		
 		HeuristicTree();

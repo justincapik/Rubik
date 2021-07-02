@@ -27,22 +27,47 @@ int		compare(Hnode *c1, Hnode *c2)
 			- (c2->cube[0] + c2->cube[1] + c2->cube[2] + c2->cube[3] + c2->cube[4] + c2->cube[5]));
 }
 
+Hnode	*HeuristicTree::rightTreeRot(Hnode *parent)
+{
+		Hnode	*son = parent->right;
+		Hnode	*grandson = son->left;
+		son->left = parent;
+		parent->right = grandson;
+		if (grandson != NULL)
+			grandon->parent = son;
+		son->parent = parent->parent;
+		parent->parent = son;
+		return (son);
+}
+
+Hnode	*HeuristicTree::leftTreeRot(Hnode *parent)
+{
+		Hnode	*son = parent->left;
+		Hnode	*grandson = son->right;
+		son->right = parent;
+		parent->left = grandson;
+		if (grandson != NULL)
+			grandon->parent = son;
+		son->parent = parent->parent;
+		parent->parent = son;
+		return (son);
+}
+
 bool	HeuristicTree::insert(int *cube, int moves)
 {
-	Hnode *newnode = new Hnode(cube, this->cubehasher(cube), NULL, NULL);
+	Hnode *newnode = new Hnode(cube, moves, NULL, NULL, NULL, TRED);
 
 	if (this->base == NULL)
 	{
 		this->base = newnode;
+		this->base->color = TBLACK;
 		return (true);
 	}
 
 	Hnode *current = this->base;
-	Hnode *prev;
 
 	while (current != NULL)
 	{
-		prev = current;
 		int comp = this->compare(current, newnode);
 		if (comp == 0)
 			return false;
