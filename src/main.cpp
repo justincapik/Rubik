@@ -14,7 +14,6 @@ int	*fnull(int *c)
 
 int		main(int argc, char **argv)
 {
-
 	BitCube creator;	
 	int *cube = creator.create_cube();
 
@@ -99,6 +98,7 @@ int		main(int argc, char **argv)
 	   printf("close list test => %d\n", s.closed_list.compare(n2, n1));
 	   */
 
+	/*
 	single_rot *solution = s.solve(cube, r);
 
 	single_rot *cpy = solution;
@@ -109,6 +109,17 @@ int		main(int argc, char **argv)
 		cpy = cpy->last;
 	}
 	printf("}\n");
+	*/
+
+	HeuristicTree ht;
+
+	ht.insert(NULL, 3);
+	ht.print_tree();
+	ht.insert(NULL, 21);
+	ht.print_tree();
+	ht.insert(NULL, 32);
+	ht.print_tree();
+	//ht.insert(NULL, 17);
 
 	return (0);
 }

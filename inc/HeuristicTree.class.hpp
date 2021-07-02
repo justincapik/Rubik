@@ -55,7 +55,8 @@ class HeuristicTree
 		int		writeTree();
 		void	*readTree();
 		int		getTreeData(void *tree, int *cube);
-		
+	
+		void	print_tree();	
 		
 		HeuristicTree();
 		~HeuristicTree();

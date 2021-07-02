@@ -23,8 +23,9 @@ HeuristicTree::~HeuristicTree()
 
 int		HeuristicTree::compare(Hnode *c1, Hnode *c2)
 {
-	return (c1->cube[0] + c1->cube[1] + c1->cube[2] + c1->cube[3] + c1->cube[4] + c1->cube[5]
-			- (c2->cube[0] + c2->cube[1] + c2->cube[2] + c2->cube[3] + c2->cube[4] + c2->cube[5]));
+	//return (c1->cube[0] + c1->cube[1] + c1->cube[2] + c1->cube[3] + c1->cube[4] + c1->cube[5]
+	//		- (c2->cube[0] + c2->cube[1] + c2->cube[2] + c2->cube[3] + c2->cube[4] + c2->cube[5]));
+	return (c1->moves - c2->moves);
 }
 
 void	HeuristicTree::rightTreeRot(Hnode *parent)
@@ -59,14 +60,14 @@ void	HeuristicTree::adjustTree(Hnode *node, Hnode *child)
 		{
 			this->leftTreeRot(node->parent);
 			node->color = TBLACK;
-			node->right->color = TBLACK;
+			node->right->color = TRED;
 		}	
 		else // RL
 		{
 			this->rightTreeRot(node);
 			this->leftTreeRot(node->parent);
 			node->color = TBLACK;
-			node->right->color = TBLACK;
+			node->right->color = TRED;
 		}
 	}
 	else
@@ -76,13 +77,13 @@ void	HeuristicTree::adjustTree(Hnode *node, Hnode *child)
 			this->leftTreeRot(node);
 			this->rightTreeRot(node->parent);
 			node->color = TBLACK;
-			node->right->color = TBLACK;
+			node->right->color = TRED;
 		}	
 		else // LL
 		{
 			this->rightTreeRot(node->parent);
 			node->color = TBLACK;
-			node->right->color = TBLACK;
+			node->right->color = TRED;
 		}
 	}
 }
@@ -150,6 +151,30 @@ bool	HeuristicTree::insert(int *cube, int moves)
 	newnode->parent = prev;
 
 	return true;
+}
+
+static void rec_print(Hnode *node, int count, int spacing)
+{
+	if (node == NULL)
+		return ;	
+	
+	dprintf(2, "%c(%d)", (node->color == TRED) ? 'R' : 'B', node->moves);
+	for (int i = 0; i < spacing - 7; ++i)
+		dprintf(2, " ");
+	rec_print(node->right, count + spacing, spacing);
+	
+	dprintf(2, "\n");
+	for (int i = 0; i < count; ++i)
+		dprintf(2, " ");
+	dprintf(2, "%c(%d)", (node->color == TRED) ? 'R' : 'B', node->moves);
+	rec_print(node->left, count + spacing, spacing);
+}
+
+void	HeuristicTree::print_tree()
+{
+	dprintf(2, "................\n");
+	rec_print(this->base, 0, 10);
+	dprintf(2, "\n````````````````\n");
 }
 
 /*
