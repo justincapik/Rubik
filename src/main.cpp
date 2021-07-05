@@ -119,7 +119,20 @@ int		main(int argc, char **argv)
 	ht.print_tree();
 	ht.insert(NULL, 32);
 	ht.print_tree();
-	//ht.insert(NULL, 17);
+	ht.insert(NULL, 16);
+	ht.print_tree();
+	ht.insert(NULL, 2);
+	ht.print_tree();
+	ht.insert(NULL, 1);
+	ht.print_tree();
+	ht.insert(NULL, 25);
+	ht.print_tree();
+	ht.insert(NULL, 31);
+	ht.print_tree();
+	ht.insert(NULL, 10);
+	ht.print_tree();
+	ht.insert(NULL, 15);
+	ht.print_tree();
 
 	return (0);
 }

@@ -9,6 +9,8 @@
 #include <functional>
 #include <fstream>
 
+#include <unistd.h>
+
 using namespace std;
 enum COLOR {WHITE, GREEN, RED, BLUE, ORANGE, YELLOW};
 
