@@ -133,6 +133,24 @@ int		main(int argc, char **argv)
 	ht.print_tree();
 	ht.insert(NULL, 15);
 	ht.print_tree();
+	ht.insert(NULL, 26);
+	ht.print_tree();
+	/*
+	ht.insert(NULL, 24);
+	ht.print_tree();
+	ht.insert(NULL, 29);
+	ht.print_tree();
+	ht.insert(NULL, 14);
+	ht.print_tree();
+	ht.insert(NULL, 113);
+	ht.print_tree();
+	ht.insert(NULL, 18);
+	ht.print_tree();
+	ht.insert(NULL, 20);
+	ht.print_tree();
+	ht.insert(NULL, 4);
+	ht.print_tree();
+	*/
 
 	return (0);
 }

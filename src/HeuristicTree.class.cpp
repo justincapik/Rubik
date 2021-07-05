@@ -35,9 +35,16 @@ void	HeuristicTree::leftTreeRot(Hnode *parent)
 	son->left = parent;
 	parent->right = grandson;
 	if (grandson != NULL)
-		grandson->parent = son;
+		grandson->parent = parent;
 	son->parent = parent->parent;
 	parent->parent = son;
+	if (son->parent != NULL)
+	{
+		if (son->parent->left == parent)
+			son->parent->left = son;
+		else
+			son->parent->right = son;
+	}
 }
 
 void	HeuristicTree::rightTreeRot(Hnode *parent)
@@ -50,6 +57,13 @@ void	HeuristicTree::rightTreeRot(Hnode *parent)
 		grandson->parent = son;
 	son->parent = parent->parent;
 	parent->parent = son;
+	if (son->parent != NULL)
+	{
+		if (son->parent->left == parent)
+			son->parent->left = son;
+		else
+			son->parent->right = son;
+	}
 }
 
 void	HeuristicTree::adjustTree(Hnode *node, Hnode *child)
@@ -67,15 +81,8 @@ void	HeuristicTree::adjustTree(Hnode *node, Hnode *child)
 		else // RL
 		{
 			dprintf(2, "RL\n");
-			write(2, "1\n", 2);
 			this->rightTreeRot(node);
-			write(2, "2\n", 2);
-			this->leftTreeRot(node->parent);
-			write(2, "3\n", 2);
-			node->color = TBLACK;
-			write(2, "4\n", 2);
-			node->left->color = TRED;
-			write(2, "5\n", 2);
+			this->leftTreeRot(node->parent->parent);
 			dprintf(2, "RL out\n");
 		}
 	}
@@ -85,9 +92,7 @@ void	HeuristicTree::adjustTree(Hnode *node, Hnode *child)
 		{
 			dprintf(2, "LR\n");
 			this->leftTreeRot(node);
-			this->rightTreeRot(node->parent);
-			node->color = TBLACK;
-			node->right->color = TRED;
+			this->rightTreeRot(node->parent->parent);
 			dprintf(2, "LR out\n");
 		}	
 		else // LL
@@ -123,6 +128,7 @@ bool	HeuristicTree::checkAndAdjustColor(Hnode *node)
 		node->parent->right->color = TBLACK;
 		return (true);
 	}
+	dprintf(2, "we're out of the uncle\n");
 	return (false);
 }
 
@@ -154,10 +160,9 @@ bool	HeuristicTree::insert(int *cube, int moves)
 		// adjusting while inserting
 		if (current != NULL && prev->color == TRED && current->color == TRED)
 		{
-			dprintf(2, "WE'RE IN IT BOYS (1)\n");
-			if (this->checkAndAdjustColor(prev))
-				continue;
-			this->adjustTree(prev, current);
+			dprintf(2, "WE'RE IN IT BOYS (insertion)\n");
+			if (!this->checkAndAdjustColor(prev))
+				this->adjustTree(prev, current);
 		}
 	}
 	int comp = this->compare(prev, newnode);
@@ -171,7 +176,7 @@ bool	HeuristicTree::insert(int *cube, int moves)
 
 	if (prev->color == TRED && newnode->color == TRED)
 	{
-		dprintf(2, "WE'RE IN IT BOYS (2)\n");
+		dprintf(2, "WE'RE IN IT BOYS (nouveau)\n");
 		if (!this->checkAndAdjustColor(prev))
 			// if the uncle is red adjust it but if not
 			// call the big complicated function (TM)
@@ -189,7 +194,9 @@ static void rec_print(Hnode *node, int count, int spacing, int depth)
 	if (node == NULL)
 		return ;	
 
-	dprintf(2, "%c[%02d](%02d)", (node->color == TRED) ? 'R' : 'B', node->moves, depth);
+	string color = (node->color == TRED) ? CRED : CBLUE;
+	dprintf(2, "%s%c[%02d](%02d)%s", color.c_str(),
+			(node->color == TRED) ? 'R' : 'B', node->moves, depth, CWHITE);
 	//for (int i = 0; i < spacing - 9; ++i)
 	//	dprintf(2, " ");
 	if (node->right != NULL)
@@ -199,9 +206,9 @@ static void rec_print(Hnode *node, int count, int spacing, int depth)
 	dprintf(2, "\n");
 	//for (int i = 0; i < count; ++i)
 	//	dprintf(2, " ");
-	for (int i = 0; i < count; ++i)
+	for (int i = 0; i <= count; ++i)
 	{
-		if (node->left != NULL)
+		if (node->left != NULL && i == count)
 			dprintf(2, "   '->      ");
 		else
 			dprintf(2, "            ");
