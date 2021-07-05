@@ -39,13 +39,14 @@ class single_rot
 #include "GraphSolver.class.hpp"
 #include "BinaryTree.class.hpp"
 #include "HeuristicTree.class.hpp"
+#include "HTmanagement.class.hpp"
 
-#define ONE	0xf0000000
-#define TWO	0x0f000000
+#define ONE		0xf0000000
+#define TWO		0x0f000000
 #define THREE	0x00f00000
 #define FOUR	0x000f0000
 #define FIVE	0x0000f000
-#define SIX	0x00000f00
+#define SIX		0x00000f00
 #define SEVEN	0x000000f0
 #define EIGHT	0x0000000f
 

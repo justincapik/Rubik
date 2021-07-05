@@ -27,6 +27,8 @@ class GraphSolver
 		bool		check_solved(int *cube);
 		bool		check_admissible_cube(int *cube, single_rot *state);
 		int		simpleHeuristic(int *cube);
+		int		poopManhattanHeuristic(int *cube);
+		int		halfManhattanHeuristic(int *cube);
 		int		manhattanHeuristic(int *cube);
 
 };

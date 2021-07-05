@@ -39,24 +39,21 @@ class Hnode
 class HeuristicTree
 {
 	private:
-		Hnode	*base;
-		int		convert_cube(int *cube, int moves);
-		void	rightTreeRot(Hnode *parent);
-		void	leftTreeRot(Hnode *parent);
-		void	adjustTree(Hnode *node, Hnode *child);
-		bool	checkAndAdjustColor(Hnode *node);
+		int			maxdepth;
+		Hnode		*base;
+		int			convert_cube(int *cube, int moves);
+		void		rightTreeRot(Hnode *parent);
+		void		leftTreeRot(Hnode *parent);
+		void		adjustTree(Hnode *node, Hnode *child);
+		bool		checkAndAdjustColor(Hnode *node);
 
 	public:
-		bool	insert(int *cube, int moves);
-		node	*search(int *cube);
-		int		compare(Hnode *c1, Hnode *c2);
-		int		comparecompact(Hnode *c1, Hnode *c2);
+		bool		insert(int *cube, int moves);
+		Hnode		*search(int *cube);
+		int			compare(Hnode *c1, Hnode *c2);
+		int			comparecompact(Hnode *c1, Hnode *c2);
 
-		int		writeTree();
-		void	*readTree();
-		int		getTreeData(void *tree, int *cube);
-	
-		void	print_tree();	
+		void		print_tree();	
 		
 		HeuristicTree();
 		~HeuristicTree();

@@ -100,6 +100,37 @@ int		GraphSolver::simpleHeuristic(int *cube)
 	return sum;
 }
 
+static int poopcolordistance(int a, int b)
+{
+	if ((0x0000000f & a) == (0x0000000f & b))
+		return (0);
+	if (((0x0000000f & a) == RED && (0x00000000f & b) == ORANGE)
+			|| ((0x0000000f & a) == ORANGE && (0x00000000f & b) == RED)
+			|| ((0x0000000f & a) == BLUE && (0x00000000f & b) == GREEN)
+			|| ((0x0000000f & a) == GREEN && (0x00000000f & b) == BLUE)
+			|| ((0x0000000f & a) == YELLOW && (0x00000000f & b) == WHITE)
+			|| ((0x0000000f & a) == WHITE && (0x00000000f & b) == YELLOW))
+		return (2);
+	else
+		return (1);
+}
+
+int		GraphSolver::poopManhattanHeuristic(int *cube)
+{
+	int sum = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		for (int j = 0; j < 8; ++j)
+			sum += poopcolordistance(cube[i] >> j, i);
+	}
+	return (sum);
+}
+
+int		GraphSolver::halfManhattanHeuristic(int *cube)
+{
+	return (0);
+}
+
 int		GraphSolver::manhattanHeuristic(int *cube)
 {
 	
@@ -116,7 +147,7 @@ bool		GraphSolver::check_admissible_cube(int *cube, single_rot *current)
 single_rot	*GraphSolver::solve(int *cube, Rotate r)
 {
 	BitCube creator;
-	single_rot		*current = new single_rot(cube, this->simpleHeuristic(cube), "ORIGINAL", NULL);
+	single_rot		*current = new single_rot(cube, this->poopManhattanHeuristic(cube), "ORIGINAL", NULL);
 
 	this->open_list.push(current);
 
@@ -135,14 +166,14 @@ single_rot	*GraphSolver::solve(int *cube, Rotate r)
 			if (check_admissible_cube(newcube, current))
 			{
 				single_rot	*newrot = new single_rot(newcube,
-						this->simpleHeuristic(newcube), poss_rots[i], current);
+						this->poopManhattanHeuristic(newcube), poss_rots[i], current);
 				this->open_list.push(newrot);
 			}
 		}
 
 		this->closed_list.insert(current->cube);
 		states++;
-		if (states % 100000 == 0)
+		if (states % 10000 == 0)
 		{
 			printf("current's value = %d - %d\n", current->value, states);
 			creator.print_cube(current->cube);

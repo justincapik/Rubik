@@ -73,21 +73,18 @@ int		main(int argc, char **argv)
 	printf("R' rotation\n");
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
+	cube = r.ApplyRotation("U'", cube);
+	printf("U' rotation\n");
+	cube = r.ApplyRotation("D'", cube);
+	printf("D' rotation\n");
+	cube = r.ApplyRotation("D'", cube);
+	printf("D' rotation\n");
+	cube = r.ApplyRotation("R'", cube);
+	printf("R' rotation\n");
 	/*
-	   cube = r.ApplyRotation("U'", cube);
-	   printf("U' rotation\n");
-	   cube = r.ApplyRotation("D'", cube);
-	   printf("D' rotation\n");
-	   cube = r.ApplyRotation("D'", cube);
-	   printf("D' rotation\n");
-	   cube = r.ApplyRotation("R'", cube);
-	   printf("R' rotation\n");
-	   */
-	/*
-	   cube = r.ApplyRotation("D", cube);
-	   printf("D rotation\n");
-	   */
-
+	cube = r.ApplyRotation("D", cube);
+	printf("D rotation\n");
+	*/
 	creator.print_cube(cube);
 
 
@@ -98,7 +95,6 @@ int		main(int argc, char **argv)
 	   printf("close list test => %d\n", s.closed_list.compare(n2, n1));
 	   */
 
-	/*
 	single_rot *solution = s.solve(cube, r);
 
 	single_rot *cpy = solution;
@@ -109,48 +105,14 @@ int		main(int argc, char **argv)
 		cpy = cpy->last;
 	}
 	printf("}\n");
-	*/
 
 	HeuristicTree ht;
 
-	ht.insert(NULL, 3);
-	ht.print_tree();
-	ht.insert(NULL, 21);
-	ht.print_tree();
-	ht.insert(NULL, 32);
-	ht.print_tree();
-	ht.insert(NULL, 16);
-	ht.print_tree();
-	ht.insert(NULL, 2);
-	ht.print_tree();
-	ht.insert(NULL, 1);
-	ht.print_tree();
-	ht.insert(NULL, 25);
-	ht.print_tree();
-	ht.insert(NULL, 31);
-	ht.print_tree();
-	ht.insert(NULL, 10);
-	ht.print_tree();
-	ht.insert(NULL, 15);
-	ht.print_tree();
-	ht.insert(NULL, 26);
-	ht.print_tree();
-	/*
-	ht.insert(NULL, 24);
-	ht.print_tree();
-	ht.insert(NULL, 29);
-	ht.print_tree();
-	ht.insert(NULL, 14);
-	ht.print_tree();
-	ht.insert(NULL, 113);
-	ht.print_tree();
-	ht.insert(NULL, 18);
-	ht.print_tree();
-	ht.insert(NULL, 20);
-	ht.print_tree();
-	ht.insert(NULL, 4);
-	ht.print_tree();
-	*/
+	for (int i = 10; i < 90000000; ++i)
+	{
+		ht.insert(NULL, i);
+	}
 
+	//ht.print_tree();
 	return (0);
 }

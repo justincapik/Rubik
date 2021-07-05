@@ -2,6 +2,7 @@
 
 HeuristicTree::HeuristicTree()
 {
+	this->maxdepth = 0;
 	this->base = NULL;
 }
 
@@ -32,6 +33,7 @@ void	HeuristicTree::leftTreeRot(Hnode *parent)
 {
 	Hnode	*son = parent->right;
 	Hnode	*grandson = son->left;
+
 	son->left = parent;
 	parent->right = grandson;
 	if (grandson != NULL)
@@ -51,6 +53,7 @@ void	HeuristicTree::rightTreeRot(Hnode *parent)
 {
 	Hnode	*son = parent->left;
 	Hnode	*grandson = son->right;
+
 	son->right = parent;
 	parent->left = grandson;
 	if (grandson != NULL)
@@ -66,75 +69,90 @@ void	HeuristicTree::rightTreeRot(Hnode *parent)
 	}
 }
 
+static void	swapcolor(Hnode *a, Hnode *b)
+{
+	bool tmp;
+
+	tmp = b->color;
+	b->color = a->color;
+	a->color = tmp;
+}
+
 void	HeuristicTree::adjustTree(Hnode *node, Hnode *child)
 {
 	if (node->parent->right == node)
 	{
 		if (node->right == child) // RR
 		{
-			dprintf(2, "RR\n");
 			this->leftTreeRot(node->parent);
-			node->color = TBLACK;
-			node->left->color = TRED;
-			dprintf(2, "RR out\n");
+			swapcolor(node, node->left);
 		}	
 		else // RL
 		{
-			dprintf(2, "RL\n");
 			this->rightTreeRot(node);
 			this->leftTreeRot(node->parent->parent);
-			dprintf(2, "RL out\n");
+			swapcolor(node->parent, node->parent->left);
 		}
 	}
 	else
 	{
 		if (node->right == child) // LR
 		{
-			dprintf(2, "LR\n");
 			this->leftTreeRot(node);
 			this->rightTreeRot(node->parent->parent);
-			dprintf(2, "LR out\n");
+			swapcolor(node->parent, node->parent->right);
 		}	
 		else // LL
 		{
-			dprintf(2, "LL\n");
 			this->rightTreeRot(node->parent);
-			node->color = TBLACK;
-			node->right->color = TRED;
-			dprintf(2, "LL out\n");
+			swapcolor(node, node->right);
 		}
 	}
 }
 
 bool	HeuristicTree::checkAndAdjustColor(Hnode *node)
 {
-	dprintf(2, "we're in uncle (not tm)\n");
 	if (node->parent->right == node
 			&& node->parent->left != NULL	
 			&& node->parent->left->color == TRED)
 	{
-		dprintf(2, "numba wan\n");
 		node->color = TBLACK;
 		node->parent->left->color = TBLACK;
+		while (this->base->parent != NULL)
+			this->base = this->base->parent;
+		if (node->parent != this->base)
+			node->parent->color = TRED;
+
+		if (node->parent->parent != NULL
+				&& node->parent->parent->color == TRED
+				&& !this->checkAndAdjustColor(node->parent->parent))
+			this->adjustTree(node->parent->parent, node->parent);
 		return (true);
 	}
 
-	if (node->parent->left == node
+	else if (node->parent->left == node
 			&& node->parent->right != NULL	
 			&& node->parent->right->color == TRED)
 	{
-		dprintf(2, "numba twu\n");
 		node->color = TBLACK;
 		node->parent->right->color = TBLACK;
+		while (this->base->parent != NULL)
+			this->base = this->base->parent;
+		if (node->parent != this->base)
+			node->parent->color = TRED;
+
+		if (node->parent->parent != NULL
+				&& node->parent->parent->color == TRED
+				&& !this->checkAndAdjustColor(node->parent->parent))
+			this->adjustTree(node->parent->parent, node->parent);
 		return (true);
 	}
-	dprintf(2, "we're out of the uncle\n");
 	return (false);
 }
 
-
 bool	HeuristicTree::insert(int *cube, int moves)
 {
+	int depth = 0;
 	Hnode *newnode = new Hnode(cube, moves, NULL, NULL, NULL, TRED);
 
 	if (this->base == NULL)
@@ -149,6 +167,7 @@ bool	HeuristicTree::insert(int *cube, int moves)
 
 	while (current != NULL)
 	{
+		depth++;
 		prev = current;
 		int comp = this->compare(current, newnode);
 		if (comp == 0)
@@ -160,7 +179,6 @@ bool	HeuristicTree::insert(int *cube, int moves)
 		// adjusting while inserting
 		if (current != NULL && prev->color == TRED && current->color == TRED)
 		{
-			dprintf(2, "WE'RE IN IT BOYS (insertion)\n");
 			if (!this->checkAndAdjustColor(prev))
 				this->adjustTree(prev, current);
 		}
@@ -176,13 +194,16 @@ bool	HeuristicTree::insert(int *cube, int moves)
 
 	if (prev->color == TRED && newnode->color == TRED)
 	{
-		dprintf(2, "WE'RE IN IT BOYS (nouveau)\n");
 		if (!this->checkAndAdjustColor(prev))
 			// if the uncle is red adjust it but if not
 			// call the big complicated function (TM)
 			this->adjustTree(prev, newnode);
 	}
-
+	if (depth > this->maxdepth)
+	{
+		dprintf(2, "new maxdepth is %d\n", depth);
+		this->maxdepth = depth;
+	}
 	while (this->base->parent != NULL)
 		base = base->parent;
 
@@ -197,15 +218,11 @@ static void rec_print(Hnode *node, int count, int spacing, int depth)
 	string color = (node->color == TRED) ? CRED : CBLUE;
 	dprintf(2, "%s%c[%02d](%02d)%s", color.c_str(),
 			(node->color == TRED) ? 'R' : 'B', node->moves, depth, CWHITE);
-	//for (int i = 0; i < spacing - 9; ++i)
-	//	dprintf(2, " ");
 	if (node->right != NULL)
 		dprintf(2, "-->");
 	rec_print(node->right, count + 1, spacing, depth + 1);
 
 	dprintf(2, "\n");
-	//for (int i = 0; i < count; ++i)
-	//	dprintf(2, " ");
 	for (int i = 0; i <= count; ++i)
 	{
 		if (node->left != NULL && i == count)
@@ -213,7 +230,6 @@ static void rec_print(Hnode *node, int count, int spacing, int depth)
 		else
 			dprintf(2, "            ");
 	}
-	//dprintf(2, "%c(%d)", (node->color == TRED) ? 'R' : 'B', node->moves);
 	rec_print(node->left, count + 1, spacing, depth + 1);
 }
 
@@ -224,25 +240,24 @@ void	HeuristicTree::print_tree()
 	dprintf(2, "\n````````````````\n");
 }
 
-/*
-   int		HeuristicTree::search(int *cube)
-   {
-   Hnode newnode = node(cube, this->cubehasher(cube), NULL, NULL);
-   Hnode *current = this->base;
-   Hnode *prev;
+Hnode	*HeuristicTree::search(int *cube)
+{
 
-   while (current != NULL)
-   {
-   prev = current;
-   int comp = this->compare(current, &newnode);
-   if (comp == 0)
-   return ;
-   else if (comp > 0)
-   current = current->right;
-   else
-   current = current->left;
-   }
-   return prev;
-   }
- */
+	Hnode newnode = Hnode(cube, -1, NULL, NULL, NULL, TRED);
+	Hnode *current = this->base;
+	Hnode *prev;
+
+	while (current != NULL)
+	{
+		prev = current;
+		int comp = this->compare(current, &newnode);
+		if (comp == 0)
+			return current;
+		else if (comp > 0)
+			current = current->right;
+		else
+			current = current->left;
+	}
+	return NULL;
+}
 
