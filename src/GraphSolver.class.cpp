@@ -126,6 +126,8 @@ int		GraphSolver::poopManhattanHeuristic(int *cube)
 	return (sum);
 }
 
+
+
 int		GraphSolver::halfManhattanHeuristic(int *cube)
 {
 	return (0);

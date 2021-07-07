@@ -1,9 +1,9 @@
 #include "rubik.hpp"
 
+HTmanagement::HTmanagement() {}
+HTmanagement::~HTmanagement() {}
 
-
-
-void		HTmanagement::writeTree()
+int			HTmanagement::writeTree()
 {
 	BitCube		creator;
 	int			*cube;

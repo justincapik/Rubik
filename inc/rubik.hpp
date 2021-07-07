@@ -8,6 +8,7 @@
 #include <queue>
 #include <functional>
 #include <fstream>
+#include <bitset>
 
 #include <unistd.h>
 

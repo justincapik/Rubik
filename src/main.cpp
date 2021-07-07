@@ -41,36 +41,15 @@ int		main(int argc, char **argv)
 	}
 	creator.print_cube(cube);
 
-	/*
-	   cube = creator.Urot(cube);
-	   printf("U rotation\n");
-	   creator.print_cube(cube);
-
-	   cube = creator.UArot(cube);
-	   printf("U' rotation\n");
-	   creator.print_cube(cube);
-
-	   cube = creator.Drot(cube);
-	   printf("D rotation\n");
-	   creator.print_cube(cube);
-
-	   cube = creator.DArot(cube);
-	   printf("D' rotation\n");
-	   creator.print_cube(cube);
-
-	   cube = r.ApplyRotation("R", cube);
-	   printf("R rotation\n");
-	   creator.print_cube(cube);
-
-	   cube = r.ApplyRotation("R'", cube);
-	   printf("R' rotation\n");
-	   creator.print_cube(cube);
-	   */
+	HTmanagement m;
 
 	GraphSolver s;
 
-	cube = r.ApplyRotation("R'", cube);
-	printf("R' rotation\n");
+	//cout << std::bitset<32>(m.convertCubeCorners(cube)) << endl;
+	creator.print_cube(cube);
+	cout << std::bitset<32>(m.convertCubeCorners(cube)) << endl;
+	cube = r.ApplyRotation("U'", cube);
+	printf("U' rotation\n");
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
 	cube = r.ApplyRotation("U'", cube);
@@ -95,6 +74,7 @@ int		main(int argc, char **argv)
 	   printf("close list test => %d\n", s.closed_list.compare(n2, n1));
 	   */
 
+	/*
 	single_rot *solution = s.solve(cube, r);
 
 	single_rot *cpy = solution;
@@ -105,14 +85,7 @@ int		main(int argc, char **argv)
 		cpy = cpy->last;
 	}
 	printf("}\n");
-
-	HeuristicTree ht;
-
-	for (int i = 10; i < 90000000; ++i)
-	{
-		ht.insert(NULL, i);
-	}
-
-	//ht.print_tree();
+	*/
+	
 	return (0);
 }
