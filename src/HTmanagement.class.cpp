@@ -3,12 +3,12 @@
 HTmanagement::HTmanagement() {}
 HTmanagement::~HTmanagement() {}
 
-int			HTmanagement::writeTree()
+void	*HTmanagement::writeTree()
 {
 	BitCube		creator;
 	int			*cube;
 
 
 
-
+	return (NULL);
 }

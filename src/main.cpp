@@ -41,13 +41,15 @@ int		main(int argc, char **argv)
 	}
 	creator.print_cube(cube);
 
-	HTmanagement m;
+	BlockBitCube b;
 
 	GraphSolver s;
 
 	//cout << std::bitset<32>(m.convertCubeCorners(cube)) << endl;
 	creator.print_cube(cube);
-	cout << std::bitset<32>(m.convertCubeCorners(cube)) << endl;
+	block_bits *block_cube = b.bitToBlockCube(cube);
+	creator.print_cube(b.blockToBitCube(block_cube));
+	
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
 	cube = r.ApplyRotation("U'", cube);
@@ -64,7 +66,7 @@ int		main(int argc, char **argv)
 	cube = r.ApplyRotation("D", cube);
 	printf("D rotation\n");
 	*/
-	creator.print_cube(cube);
+	//creator.print_cube(cube);
 
 
 	/*

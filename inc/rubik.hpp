@@ -41,6 +41,7 @@ class single_rot
 #include "BinaryTree.class.hpp"
 #include "HeuristicTree.class.hpp"
 #include "HTmanagement.class.hpp"
+#include "BlockBitCube.class.hpp"
 
 #define ONE		0xf0000000
 #define TWO		0x0f000000

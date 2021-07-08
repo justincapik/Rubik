@@ -9,7 +9,8 @@ SRC = 		main.cpp \
 		GraphSolver.class.cpp \
 		BinaryTree.class.cpp \
 		HeuristicTree.class.cpp \
-		HTmanagement.class.cpp
+		HTmanagement.class.cpp \
+		BlockBitCube.class.cpp
 
 SRCS      =	$(addprefix $(SRC_DIR), $(SRC))
 
