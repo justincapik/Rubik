@@ -1,0 +1,9 @@
+for now:
+		- use longs for the corners
+		- finish the converter (also to check if the rotations are right)
+		- recheck the rotations
+		- do the heuristic database
+		- when i do rotations check out block_bits rotations to see if it's viable
+
+at some point:
+		- use red and black tree for closed list

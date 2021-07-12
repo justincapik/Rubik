@@ -46,12 +46,14 @@ int		main(int argc, char **argv)
 	GraphSolver s;
 
 	//cout << std::bitset<32>(m.convertCubeCorners(cube)) << endl;
-	creator.print_cube(cube);
 	block_bits *block_cube = b.bitToBlockCube(cube);
 	creator.print_cube(b.blockToBitCube(block_cube));
 	
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
+	block_cube = b.bitToBlockCube(cube);
+	creator.print_cube(b.blockToBitCube(block_cube));
+	creator.print_cube(cube);
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
 	cube = r.ApplyRotation("U'", cube);
