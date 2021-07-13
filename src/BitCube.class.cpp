@@ -384,11 +384,11 @@ int		*BitCube::Rrot(int *oldcube)
 	int *cube = new int[6];
 	for(int i = 0; i < 6; ++i)
 		cube[i] = oldcube[i];
-	int face = cube[2];
+	int face = cube[RED];
 
-	asm volatile ("rol $24, %[face]" : [face] "+r" (face) : );	
+	asm volatile ("rol $8, %[face]" : [face] "+r" (face) : );	
 
-	cube[2] = face;
+	cube[RED] = face;
 
 	//      N
 	//  f2 f3 f4
@@ -428,11 +428,11 @@ int		*BitCube::RArot(int *oldcube)
 	for(int i = 0; i < 6; ++i)
 		cube[i] = oldcube[i];
 
-	int face = cube[2];
+	int face = cube[RED];
 
-	asm volatile ("rol $8, %[face]" : [face] "+r" (face) : );	
+	asm volatile ("rol $24, %[face]" : [face] "+r" (face) : );	
 
-	cube[2] = face;
+	cube[RED] = face;
 
 	//      N
 	//  f2 f3 f4
@@ -468,3 +468,94 @@ int		*BitCube::RArot(int *oldcube)
 	return (cube);
 }
 // R rotations (red side)
+
+// L rotations (orange side)
+int		*BitCube::Lrot(int *oldcube)
+{
+	int *cube = new int[6];
+	for(int i = 0; i < 6; ++i)
+		cube[i] = oldcube[i];
+	int face = cube[ORANGE];
+
+	asm volatile ("rol $8, %[face]" : [face] "+r" (face) : );	
+
+	cube[ORANGE] = face;
+
+	//      N
+	//  f2 f3 f4
+	//      N 
+	//     f1
+
+	int f1 = 5;
+	int f2 = 3;
+	int f3 = 0;
+	int f4 = 1;
+	
+	//  2   R
+	// 301 BWG
+	//  4   O
+	//  5   Y
+
+	//  1 2 3
+	//  8   4
+	//  7 6 5
+	swap_stickers(cube, f1, SEVEN, f2, THREE, 7 - 3);
+	swap_stickers(cube, f1, SIX, f2, TWO, 6 - 2);
+	swap_stickers(cube, f1, FIVE, f2, ONE, 5 - 1);
+
+	swap_stickers(cube, f3, THREE, f4, THREE, 3 - 3);
+	swap_stickers(cube, f3, TWO, f4, TWO, 2 - 2);
+	swap_stickers(cube, f3, ONE, f4, ONE, 1 - 1);
+
+	swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
+	swap_stickers(cube, f3, TWO, f1, SIX, 2 - 6);
+	swap_stickers(cube, f3, ONE, f1, FIVE, 1 - 5);
+
+	return (cube);
+}
+int		*BitCube::LArot(int *oldcube)
+{
+	int *cube = new int[6];
+	for(int i = 0; i < 6; ++i)
+		cube[i] = oldcube[i];
+
+	int face = cube[RED];
+
+	asm volatile ("rol $24, %[face]" : [face] "+r" (face) : );	
+
+	cube[RED] = face;
+
+	//      N
+	//  f2 f3 f4
+	//      N 
+	//     f1
+
+	int f1 = 5;
+	int f2 = 1;
+	int f3 = 0;
+	int f4 = 3;
+	
+	//  2   R
+	// 301 BWG
+	//  4   O
+	//  5   Y
+
+	//  1 2 3
+	//  8   4
+	//  7 6 5
+
+	swap_stickers(cube, f1, SEVEN, f2, THREE, 7 - 3);
+	swap_stickers(cube, f1, SIX, f2, TWO, 6 - 2);
+	swap_stickers(cube, f1, FIVE, f2, ONE, 5 - 1);
+
+	swap_stickers(cube, f3, THREE, f4, THREE, 3 - 3);
+	swap_stickers(cube, f3, TWO, f4, TWO, 2 - 2);
+	swap_stickers(cube, f3, ONE, f4, ONE, 1 - 1);
+
+	swap_stickers(cube, f3, THREE, f1, SEVEN, 3 - 7);
+	swap_stickers(cube, f3, TWO, f1, SIX, 2 - 6);
+	swap_stickers(cube, f3, ONE, f1, FIVE, 1 - 5);
+
+	return (cube);
+}
+// L rotations (orange side)

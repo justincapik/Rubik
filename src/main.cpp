@@ -39,6 +39,15 @@ int		main(int argc, char **argv)
 		cube[4] |= 0x00f000f0;
 		cube[5] |= 0x00f000f0;
 	}
+	if (argc > 1 && argv[1][0] == 'p')
+	{
+		cube[0] |= 0x00f00000;
+		cube[1] |= 0x00f00000;
+		cube[2] |= 0x00f00000;
+		cube[3] |= 0x00f00000;
+		cube[4] |= 0x00f00000;
+		cube[5] |= 0x00f00000;
+	}
 	creator.print_cube(cube);
 
 	BlockBitCube b;
@@ -47,23 +56,24 @@ int		main(int argc, char **argv)
 
 	//cout << std::bitset<32>(m.convertCubeCorners(cube)) << endl;
 	block_bits *block_cube = b.bitToBlockCube(cube);
-	creator.print_cube(b.blockToBitCube(block_cube));
+	//creator.print_cube(b.blockToBitCube(block_cube));
 	
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
+	cube = r.ApplyRotation("U'", cube);
+	printf("U' rotation\n");
+	cube = r.ApplyRotation("D'", cube);
+	printf("D' rotation\n");
+	cube = r.ApplyRotation("D'", cube);
+	printf("D' rotation\n");
 	block_cube = b.bitToBlockCube(cube);
 	creator.print_cube(b.blockToBitCube(block_cube));
 	creator.print_cube(cube);
-	cube = r.ApplyRotation("U'", cube);
-	printf("U' rotation\n");
-	cube = r.ApplyRotation("U'", cube);
-	printf("U' rotation\n");
-	cube = r.ApplyRotation("D'", cube);
-	printf("D' rotation\n");
-	cube = r.ApplyRotation("D'", cube);
-	printf("D' rotation\n");
 	cube = r.ApplyRotation("R'", cube);
 	printf("R' rotation\n");
+	block_cube = b.bitToBlockCube(cube);
+	creator.print_cube(b.blockToBitCube(block_cube));
+	creator.print_cube(cube);
 	/*
 	cube = r.ApplyRotation("D", cube);
 	printf("D rotation\n");
@@ -78,7 +88,6 @@ int		main(int argc, char **argv)
 	   printf("close list test => %d\n", s.closed_list.compare(n2, n1));
 	   */
 
-	/*
 	single_rot *solution = s.solve(cube, r);
 
 	single_rot *cpy = solution;
@@ -89,7 +98,6 @@ int		main(int argc, char **argv)
 		cpy = cpy->last;
 	}
 	printf("}\n");
-	*/
 	
 	return (0);
 }

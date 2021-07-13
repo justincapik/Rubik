@@ -57,8 +57,8 @@ class BlockBitCube
 {
 
 	private:
-		static int		sidetable[24];
-		static int		cornertable[24];
+		static const int		sidetable[24];
+		static const int		cornertable[24];
 		bool	addcorner(long *corners, int c1, int c2, int c3);
 		bool	addsides(long *sides, int c1, int c2);
 

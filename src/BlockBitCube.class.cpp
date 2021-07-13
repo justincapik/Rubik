@@ -3,7 +3,7 @@
 BlockBitCube::BlockBitCube() {}
 BlockBitCube::~BlockBitCube() {}
 
-int	BlockBitCube::cornertable[] =
+const int	BlockBitCube::cornertable[24] =
 {
 	(WHITE << (4 * 2)) | (ORANGE << 4) | BLUE, // WOB 0
 	(BLUE << (4 * 2)) | (WHITE << 4) | ORANGE, // WOB 1
@@ -25,9 +25,9 @@ int	BlockBitCube::cornertable[] =
 	(ORANGE << (4 * 2)) | (YELLOW << 4) | BLUE, // YOB
 	(BLUE << (4 * 2)) | (ORANGE << 4) | YELLOW, // YOB
 
-	(YELLOW << (4 * 2)) | (BLUE << 4) | RED, // YRB
-	(RED << (4 * 2)) | (YELLOW << 4) | BLUE, // YRB
-	(BLUE << (4 * 2)) | (RED << 4) | YELLOW, // YRB
+	(YELLOW << (4 * 2)) | (RED << 4) | BLUE, // YRB
+	(BLUE << (4 * 2)) | (YELLOW << 4) | RED, // YRB
+	(RED << (4 * 2)) | (BLUE << 4) | YELLOW, // YRB
 
 	(YELLOW << (4 * 2)) | (GREEN << 4) | RED, // YGR
 	(RED << (4 * 2)) | (YELLOW << 4) | GREEN, // YGR
@@ -35,10 +35,10 @@ int	BlockBitCube::cornertable[] =
 
 	(YELLOW << (4 * 2)) | (ORANGE << 4) | GREEN, // YOG
 	(GREEN << (4 * 2)) | (YELLOW << 4) | ORANGE,// YOG
-	(GREEN << (4 * 2)) | (ORANGE << 4) | YELLOW, // YOG
+	(ORANGE << (4 * 2)) | (GREEN << 4) | YELLOW, // YOG
 };
 
-int BlockBitCube::sidetable[] =
+const int BlockBitCube::sidetable[24] =
 {
 	(WHITE << 4) | RED, // WR
 	(RED << 4) | WHITE,
@@ -108,6 +108,7 @@ static string            gc(int v)
 
 bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 {
+	static int id = 0;
 	int elem = (c1 << (4 * 2)) | (c2 << 4) | c3;
 	printf("c1=>%s c2=>%s c3=>%s --- ", gc(c1).c_str(), gc(c2).c_str(), gc(c3).c_str());
 
@@ -115,7 +116,8 @@ bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 	{
 		if ((this->cornertable[i] & 0xfff) == (elem & 0xfff)) // comparing the made corners
 		{
-			printf("(%02d) ", i);
+			printf("[%02d] (%02d) ", id, i);
+			id = (id + 1) % 8;
 			cout << "(" << bitset<5>(i) << ") ";
 			*corners = ((*corners) << 5) | i;
 			cout << "corners = " << bitset<64>(*corners) << endl;
@@ -129,6 +131,7 @@ bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 	   cout << "arriving number => " << bitset<12>(corner) << endl;
 	   */
 	*corners = ((*corners) << 5) | 0;
+	id = (id + 1) % 8;
 	printf("didn't work out\n");
 	return (false);
 }
@@ -136,21 +139,21 @@ bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 bool	BlockBitCube::addsides(long *sides, int c1, int c2)
 {
 	int elem = (c1 << 4) | c2;
-	printf("c1=>%s c2=>%s --- ", gc(c1).c_str(), gc(c2).c_str());
+	//printf("c1=>%s c2=>%s --- ", gc(c1).c_str(), gc(c2).c_str());
 
 	for (int i = 0; i < 24; ++i)
 	{
 		if ((this->sidetable[i] & 0xff) == (elem & 0xff))
 			// comparing the made sides (color#1 color#2)[4 bits and 4 bits]
 		{
-			printf("(%02d) ", i);
-			cout << "(" << bitset<5>(i) << ") ";
 			*sides = ((*sides) << 5) | i;
-			cout << "sides = " << bitset<64>((*sides)) << endl;
+			//printf("(%02d) ", i);
+			//cout << "(" << bitset<5>(i) << ") ";
+			//cout << "sides = " << bitset<64>((*sides)) << endl;
 			return (true);
 		}
 	}
-	printf("didn't work out\n");
+	//printf("didn't work out\n");
 	return (false);
 }
 
@@ -184,21 +187,21 @@ block_bits		*BlockBitCube::bitToBlockCube(int *cube)
 	block_bits	*data = new block_bits;
 	// always turning clockwise when reading on the cube
 	if (!this->addcorner(&(data->corners), CUBE7(WHITE), CUBE1(ORANGE), CUBE5(BLUE))) // WOB corner 1
-		printf("corner 1 foire\n\n");
+		printf("corner 1 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE1(WHITE), CUBE3(BLUE), CUBE7(RED))) // WBR corner 2
-		printf("corner 2 foire\n\n");
+		printf("corner 2 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE3(WHITE), CUBE5(RED), CUBE1(GREEN))) // WRG corner 3
-		printf("corner 3 foire\n\n");
+		printf("corner 3 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE5(WHITE), CUBE7(GREEN), CUBE3(ORANGE))) // WGO corner 4
-		printf("cornerer 4 foire\n\n");
+		printf("cornerer 4 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE1(YELLOW), CUBE7(BLUE), CUBE7(ORANGE))) // YBO corner 5
-		printf("corner 5 foire\n\n");
-	if (!this->addcorner(&(data->corners), CUBE7(YELLOW), CUBE1(BLUE), CUBE1(RED))) // YBR corner 6
-		printf("corner 6 foire\n\n");
+		printf("corner 5 foire\n");
+	if (!this->addcorner(&(data->corners), CUBE7(YELLOW), CUBE1(RED), CUBE1(BLUE))) // YRB corner 6
+		printf("corner 6 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE5(YELLOW), CUBE3(GREEN), CUBE3(RED))) // YGR corner 7
-		printf("corner 7 foire\n\n");
+		printf("corner 7 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE3(YELLOW), CUBE5(ORANGE), CUBE5(GREEN))) // YOG corner 8
-		printf("corner 8 foire\n\n");
+		printf("corner 8 foire\n");
 	printf("data = %ld\n", data->corners);
 
 	// FOR SIDE CUBIES
@@ -274,8 +277,8 @@ int		*BlockBitCube::blockToBitCube(block_bits *blocks)
 	
 	corners >>= 5;
 	c = this->cornertable[corners & 0x1f]; // corner 6
-	cube[RED] += ACUBE1(c >> 0);
-	cube[BLUE] += ACUBE1(c >> 4);
+	cube[BLUE] += ACUBE1(c >> 0);
+	cube[RED] += ACUBE1(c >> 4);
 	cube[YELLOW] += ACUBE7(c >> 8);
 
 	corners >>= 5;
@@ -352,22 +355,22 @@ int		*BlockBitCube::blockToBitCube(block_bits *blocks)
 	cube[RED] += ACUBE4(s >> 4);
 	
 	sides >>= 5;
-	s = this->sidetable[sides & 0x1f]; // side 12
+	s = this->sidetable[sides & 0x1f]; // side 4
 	cube[BLUE] += ACUBE4(s >> 0);
 	cube[WHITE] += ACUBE8(s >> 4);
 	
 	sides >>= 5;
-	s = this->sidetable[sides & 0x1f]; // side 12
+	s = this->sidetable[sides & 0x1f]; // side 3
 	cube[ORANGE] += ACUBE2(s >> 0);
 	cube[WHITE] += ACUBE6(s >> 4);
 	
 	sides >>= 5;
-	s = this->sidetable[sides & 0x1f]; // side 12
+	s = this->sidetable[sides & 0x1f]; // side 2
 	cube[GREEN] += ACUBE8(s >> 0);
 	cube[WHITE] += ACUBE4(s >> 4);
 	
 	sides >>= 5;
-	s = this->sidetable[sides & 0x1f]; // side 12
+	s = this->sidetable[sides & 0x1f]; // side 1
 	cube[RED] += ACUBE6(s >> 0);
 	cube[WHITE] += ACUBE2(s >> 4);
 
