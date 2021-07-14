@@ -21,7 +21,7 @@ bool    Rotate::AddFunction(string dir, int *(*foo)(int *))
 
 	for (int i = 0; i < dir.size(); ++i)
 		index += (int)dir[i];
-	printf("for %s the index is %d\n", dir.c_str(), index);
+	//printf("for %s the index is %d\n", dir.c_str(), index);
 
 	if (index == 0)
 	{

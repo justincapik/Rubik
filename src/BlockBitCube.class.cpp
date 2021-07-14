@@ -108,19 +108,21 @@ static string            gc(int v)
 
 bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 {
-	static int id = 0;
+	//static int id = 0;
 	int elem = (c1 << (4 * 2)) | (c2 << 4) | c3;
-	printf("c1=>%s c2=>%s c3=>%s --- ", gc(c1).c_str(), gc(c2).c_str(), gc(c3).c_str());
+	//printf("c1=>%s c2=>%s c3=>%s --- ", gc(c1).c_str(), gc(c2).c_str(), gc(c3).c_str());
 
 	for (int i = 0; i < 24; ++i)
 	{
 		if ((this->cornertable[i] & 0xfff) == (elem & 0xfff)) // comparing the made corners
 		{
+			*corners = ((*corners) << 5) | i;
+			/*
 			printf("[%02d] (%02d) ", id, i);
 			id = (id + 1) % 8;
 			cout << "(" << bitset<5>(i) << ") ";
-			*corners = ((*corners) << 5) | i;
 			cout << "corners = " << bitset<64>(*corners) << endl;
+			*/
 			return (true);
 		}
 	}
@@ -131,8 +133,8 @@ bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 	   cout << "arriving number => " << bitset<12>(corner) << endl;
 	   */
 	*corners = ((*corners) << 5) | 0;
-	id = (id + 1) % 8;
-	printf("didn't work out\n");
+	//id = (id + 1) % 8;
+	//printf("didn't work out\n");
 	return (false);
 }
 
@@ -155,6 +157,54 @@ bool	BlockBitCube::addsides(long *sides, int c1, int c2)
 	}
 	//printf("didn't work out\n");
 	return (false);
+}
+
+long			BlockBitCube::bitToBlockCorner(int *cube)
+{
+	// 1    2    3    4    5    6    7    8
+	// 0000 0000 0000 0000 0000 0000 0000 0000
+	// 1111 2222 3333 4444 5555 6666 7777 8888
+	// each side is coded as (T/B)(R/L)(F/B)
+	// White is top, Yellow is bottom,
+	// Green is right, Blue is left,
+	// Red is back, Orange is front
+
+	// always turning clockwise when reading on the cube
+	//        6   7
+	//          R2
+	//        2   3
+	//
+	// 6   2  2   3  3   7
+	//   B3     W0     G1
+	// 5   1  1   4  4   8
+	//
+	//        1   4
+	//          O4
+	//        5   8
+	//
+	//        5   8
+	//          Y5
+	//        6   7
+
+	long data = 0;
+	// always turning clockwise when reading on the cube
+	if (!this->addcorner(&(data), CUBE7(WHITE), CUBE1(ORANGE), CUBE5(BLUE))) // WOB corner 1
+		printf("corner 1 foire\n");
+	if (!this->addcorner(&(data), CUBE1(WHITE), CUBE3(BLUE), CUBE7(RED))) // WBR corner 2
+		printf("corner 2 foire\n");
+	if (!this->addcorner(&(data), CUBE3(WHITE), CUBE5(RED), CUBE1(GREEN))) // WRG corner 3
+		printf("corner 3 foire\n");
+	if (!this->addcorner(&(data), CUBE5(WHITE), CUBE7(GREEN), CUBE3(ORANGE))) // WGO corner 4
+		printf("cornerer 4 foire\n");
+	if (!this->addcorner(&(data), CUBE1(YELLOW), CUBE7(BLUE), CUBE7(ORANGE))) // YBO corner 5
+		printf("corner 5 foire\n");
+	if (!this->addcorner(&(data), CUBE7(YELLOW), CUBE1(RED), CUBE1(BLUE))) // YRB corner 6
+		printf("corner 6 foire\n");
+	if (!this->addcorner(&(data), CUBE5(YELLOW), CUBE3(GREEN), CUBE3(RED))) // YGR corner 7
+		printf("corner 7 foire\n");
+	if (!this->addcorner(&(data), CUBE3(YELLOW), CUBE5(ORANGE), CUBE5(GREEN))) // YOG corner 8
+		printf("corner 8 foire\n");
+	return (data);	
 }
 
 block_bits		*BlockBitCube::bitToBlockCube(int *cube)
