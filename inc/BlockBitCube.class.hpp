@@ -47,8 +47,8 @@
 
 typedef struct	block_bits
 {
-	long	corners; // five bits are used for each corner, they indicate the index in cornertable[24]
-	long	sides; // five bits used for every side, each indicating the index in sidetable[24]
+	uint64_t	corners; // five bits are used for each corner, they indicate the index in cornertable[24]
+	uint64_t	sides; // five bits used for every side, each indicating the index in sidetable[24]
 }				block_bits;
 
 
@@ -59,8 +59,8 @@ class BlockBitCube
 	private:
 		static const int		sidetable[24];
 		static const int		cornertable[24];
-		bool	addcorner(long *corners, int c1, int c2, int c3);
-		bool	addsides(long *sides, int c1, int c2);
+		bool	addcorner(uint64_t *corners, int c1, int c2, int c3);
+		bool	addsides(uint64_t *sides, int c1, int c2);
 
 
 	public:
@@ -73,7 +73,7 @@ class BlockBitCube
 
 		int			*blockToBitCube(block_bits *cube);
 		block_bits	*bitToBlockCube(int *cube);
-		long		bitToBlockCorner(int *cube);
+		uint64_t		bitToBlockCorner(int *cube);
 
 };
 

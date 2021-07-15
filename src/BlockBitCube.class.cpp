@@ -106,7 +106,7 @@ static string            gc(int v)
 	return (ret);
 }
 
-bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
+bool	BlockBitCube::addcorner(uint64_t *corners, int c1, int c2, int c3)
 {
 	//static int id = 0;
 	int elem = (c1 << (4 * 2)) | (c2 << 4) | c3;
@@ -138,7 +138,7 @@ bool	BlockBitCube::addcorner(long *corners, int c1, int c2, int c3)
 	return (false);
 }
 
-bool	BlockBitCube::addsides(long *sides, int c1, int c2)
+bool	BlockBitCube::addsides(uint64_t *sides, int c1, int c2)
 {
 	int elem = (c1 << 4) | c2;
 	//printf("c1=>%s c2=>%s --- ", gc(c1).c_str(), gc(c2).c_str());
@@ -159,7 +159,7 @@ bool	BlockBitCube::addsides(long *sides, int c1, int c2)
 	return (false);
 }
 
-long			BlockBitCube::bitToBlockCorner(int *cube)
+uint64_t			BlockBitCube::bitToBlockCorner(int *cube)
 {
 	// 1    2    3    4    5    6    7    8
 	// 0000 0000 0000 0000 0000 0000 0000 0000
@@ -186,7 +186,7 @@ long			BlockBitCube::bitToBlockCorner(int *cube)
 	//          Y5
 	//        6   7
 
-	long data = 0;
+	uint64_t data = 0;
 	// always turning clockwise when reading on the cube
 	if (!this->addcorner(&(data), CUBE7(WHITE), CUBE1(ORANGE), CUBE5(BLUE))) // WOB corner 1
 		printf("corner 1 foire\n");
@@ -252,7 +252,7 @@ block_bits		*BlockBitCube::bitToBlockCube(int *cube)
 		printf("corner 7 foire\n");
 	if (!this->addcorner(&(data->corners), CUBE3(YELLOW), CUBE5(ORANGE), CUBE5(GREEN))) // YOG corner 8
 		printf("corner 8 foire\n");
-	printf("data = %ld\n", data->corners);
+	printf("data = %lld\n", data->corners);
 
 	// FOR SIDE CUBIES
 	// 1    2    3    4    5    6    7    8    9    10   11   12   14   15   16
@@ -311,7 +311,7 @@ int		*BlockBitCube::blockToBitCube(block_bits *blocks)
 		cube[i] = 0x0;
 	
 	// CORNERS
-	long	corners = blocks->corners;
+	uint64_t	corners = blocks->corners;
 	int		c;
 
 	c = this->cornertable[corners & 0x1f]; // corner 8
@@ -362,7 +362,7 @@ int		*BlockBitCube::blockToBitCube(block_bits *blocks)
 	cube[WHITE] += ACUBE7(c >> 8);
 
 	// SIDES
-	long	sides = blocks->sides;
+	uint64_t	sides = blocks->sides;
 	int		s;
 	
 	s = this->sidetable[sides & 0x1f]; // side 12

@@ -3,11 +3,15 @@
 
 #include "rubik.hpp"
 
-# define TABLESIZE 120000000 // multiple de 1024
+//# define TABLESIZE 120000000
+# define TABLESIZE 90000000
 
-# define ELEMSHIFT 24
-# define VALUESHIFT 20
+# define ELEMSIZE 40
+# define VALUESIZE 4
+# define NEXTSIZE (64 - ELEMSIZE - VALUESIZE)
 
+# define ELEMSHIFT (VALUESIZE + NEXTSIZE)
+# define VALUESHIFT (NEXTSIZE)
 
 
 class hash_elem
@@ -37,19 +41,26 @@ class HTmanagement
 		int		biggestdistance;
 		int		biggestvalue;
 		int		elementsadded;
-		long	*table; // index is 1111 1222 2233 ... 8888 VVVV VVNN NNNN NNNN NNNN
+		
+		uint64_t	elemmask;
+		uint64_t	valuemask;
+		uint64_t	nextmask;
+
+		uint64_t	*table; // index is 1111 1222 2233 ... 8888 VVVV VVNN NNNN NNNN NNNN
 		// first 40 bits are for the data, the next 4 are for the value,
 		// and the last 20 are for the pointer to the next one in case of copies
-		bool	addTable(long elem, int value); // true if added, false if it's a copy
-		int		hash(long corners);
-
 		std::priority_queue<hash_elem*, std::vector<hash_elem*>, HTCustomCompare> to_visit;
+
+		bool	addTable(uint64_t elem, int value); // true if added, false if it's a copy
+		int		hash(uint64_t corners);
+
+		void	print_table();
 
 	public:
 
 		bool	insert(int *cube);
 		void	*writeTree(Rotate r);
-		long	*getData();
+		uint64_t	*getData();
 		int		searchData(void *data, int *cube);
 
 		HTmanagement();

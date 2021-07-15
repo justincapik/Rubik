@@ -9,6 +9,7 @@
 #include <functional>
 #include <fstream>
 #include <bitset>
+#include <cmath>
 
 #include <unistd.h>
 
