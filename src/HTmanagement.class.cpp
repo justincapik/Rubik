@@ -5,14 +5,15 @@ HTmanagement::HTmanagement()
 	this->biggestdistance = 0;
 	this->biggestvalue = 0;
 	this->elementsadded = 0;
+	this->elementsexplored = 0;
 	this->table = new uint64_t[TABLESIZE];
 
 	this->elemmask = 0xffffffffff;
-	this->valuemask = 1;
-	for (int i = 0; i < VALUESIZE - 1; ++i)
+	this->valuemask = 0;
+	for (int i = 0; i < VALUESIZE; ++i)
 		this->valuemask = (this->valuemask << 1) | 1;
-	this->nextmask = 1;
-	for (int i = 0; i < NEXTSIZE - 1; ++i)
+	this->nextmask = 0;
+	for (int i = 0; i < NEXTSIZE; ++i)
 		this->nextmask = (this->nextmask << 1) | 1;
 
 	dprintf(2, "elemmask = 0x%llx\n", this->elemmask);
@@ -55,7 +56,8 @@ bool			HTmanagement::addTable(uint64_t elem, int value)
 	}
 	if (value >= pow(2.0, VALUESIZE))
 	{
-		dprintf(2, "v bad, the value is bigger than %f (%d)\n", pow(2.0, VALUESIZE), this->elementsadded);
+		dprintf(2, "v bad, the value is bigger than %f (%d/%d)\n",
+				pow(2.0, VALUESIZE), this->elementsadded, this->elementsexplored);
 		//this->print_table();
 		exit(-1);
 	}
@@ -127,7 +129,8 @@ bool			HTmanagement::addTable(uint64_t elem, int value)
 			}
 			if (i > this->biggestdistance)
 			{
-				dprintf(2, "biggest distance is now %d (%d added)\n", i, this->elementsadded);
+				dprintf(2, "biggest distance is now %d (%d/%d added)\n",
+						i, this->elementsadded, this->elementsexplored);
 				this->biggestdistance = i;
 			}
 			this->table[(hash + i) % TABLESIZE] = (elem << ELEMSHIFT) | (value << VALUESHIFT);
@@ -149,6 +152,9 @@ void			*HTmanagement::writeTree(Rotate r)
 	BlockBitCube	converter;
 	int				*cube;
 
+	string		*poss_rots = r.get_poss_rot();
+	int			nb_poss_rots = r.get_poss_it() - 1; // -1 because the last entry doesn't work
+
 	cube = creator.create_cube();
 	this->to_visit.push(new hash_elem(cube, 0));
 
@@ -159,12 +165,10 @@ void			*HTmanagement::writeTree(Rotate r)
 	while (this->to_visit.empty() != true)
 	{
 		//this->print_table();
-		string		*poss_rots = r.get_poss_rot();
 		hash_elem	*current = this->to_visit.top();
 		this->to_visit.pop();
 
-		for (int i = 0; i < r.get_poss_it() - 1; ++i)
-			// -1 because the last entry doesn't work
+		for (int i = 0; i < nb_poss_rots; ++i)
 		{
 			int			*newcube = r.ApplyRotation(poss_rots[i], current->cube);
 			/*
@@ -172,18 +176,21 @@ void			*HTmanagement::writeTree(Rotate r)
 			   cout << bitset<40>(converter.bitToBlockCorner(newcube)) << "\n";
 			   creator.print_cube(newcube);
 			   */
+			this->elementsexplored++;
 			if (addTable(converter.bitToBlockCorner(newcube), current->value + 1) == true)
 			{
 				this->to_visit.push(new hash_elem(newcube, current->value + 1)); 
 				this->elementsadded++;
 			}
+			else
+				delete newcube;
 		}
 		delete current;
 	}
 	dprintf(2, "HOLY SHIT\n");
 
 	FILE* pFile;
-	pFile = fopen("HeuristicData.txt", "wb");
+	pFile = fopen("HeuristicData.bits", "wb");
 
 	fwrite(this->table, 1, TABLESIZE * sizeof(uint64_t), pFile);
 	fclose(pFile);	
@@ -191,7 +198,33 @@ void			*HTmanagement::writeTree(Rotate r)
 	return (NULL);
 }
 
-uint64_t		*getData()
+uint64_t		*HTmanagement::getData()
 {
-	return (NULL);
+	ifstream bigFile("HeuristicData.bits");
+	char *buffer = new char[TABLESIZE * sizeof(uint64_t)];
+
+	bigFile.read(buffer, TABLESIZE);
+	return (reinterpret_cast<uint64_t*>(buffer));
 }
+
+int				HTmanagement::searchData(uint64_t *data, uint64_t corners)
+{
+	int		hash = this->hash(corners);
+
+	if (data[hash] == 0)
+		return (-1);
+	while (((data[hash] >> ELEMSHIFT) & this->elemmask) != corners
+			&& (data[hash] & this->nextmask) != 0) // go through the chain until the last one
+		hash = (hash + (data[hash] & this->nextmask)) % TABLESIZE;
+	return ((data[hash] >> VALUESHIFT) & this->valuemask);
+}
+
+
+
+
+
+
+
+
+
+

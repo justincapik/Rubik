@@ -136,6 +136,8 @@ int		GraphSolver::halfManhattanHeuristic(int *cube)
 int		GraphSolver::manhattanHeuristic(int *cube)
 {
 	
+
+
 	return (0);
 }
 

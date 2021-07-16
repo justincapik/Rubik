@@ -3,11 +3,11 @@
 
 #include "rubik.hpp"
 
-//# define TABLESIZE 120000000
-# define TABLESIZE 90000000
+# define TABLESIZE 95000000
+//# define TABLESIZE 100000
 
 # define ELEMSIZE 40
-# define VALUESIZE 4
+# define VALUESIZE 5
 # define NEXTSIZE (64 - ELEMSIZE - VALUESIZE)
 
 # define ELEMSHIFT (VALUESIZE + NEXTSIZE)
@@ -41,7 +41,8 @@ class HTmanagement
 		int		biggestdistance;
 		int		biggestvalue;
 		int		elementsadded;
-		
+		int		elementsexplored;
+
 		uint64_t	elemmask;
 		uint64_t	valuemask;
 		uint64_t	nextmask;
@@ -61,7 +62,7 @@ class HTmanagement
 		bool	insert(int *cube);
 		void	*writeTree(Rotate r);
 		uint64_t	*getData();
-		int		searchData(void *data, int *cube);
+		int		searchData(uint64_t *data, uint64_t	corners);
 
 		HTmanagement();
 		~HTmanagement();

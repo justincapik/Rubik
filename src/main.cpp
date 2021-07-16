@@ -23,6 +23,7 @@ int		main(int argc, char **argv)
 	r.AddFunction("U'", &(BitCube::UArot));
 	r.AddFunction("R", &(BitCube::Rrot));
 	r.AddFunction("R'", &(BitCube::RArot));
+	/*
 	r.AddFunction("D", &(BitCube::Drot));
 	r.AddFunction("D'", &(BitCube::DArot));
 	r.AddFunction("F", &(BitCube::Frot));
@@ -31,6 +32,7 @@ int		main(int argc, char **argv)
 	r.AddFunction("B'", &(BitCube::BArot));
 	r.AddFunction("L", &(BitCube::Lrot));
 	r.AddFunction("L'", &(BitCube::LArot));
+	*/
 	r.AddFunction("N", &(fnull));
 	//r.ApplyRotation("AH", cube);
 	//r.ApplyRotation("HM", cube);

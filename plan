@@ -11,3 +11,4 @@ for now:
 
 at some point:
 		- use red and black tree for closed list
+		- change closed list cube comparison to check for exact doubles
