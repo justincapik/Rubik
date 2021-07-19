@@ -16,9 +16,9 @@ HTmanagement::HTmanagement()
 	for (int i = 0; i < NEXTSIZE; ++i)
 		this->nextmask = (this->nextmask << 1) | 1;
 
-	dprintf(2, "elemmask = 0x%llx\n", this->elemmask);
-	dprintf(2, "valuemask = 0x%llx\n", this->valuemask);
-	dprintf(2, "nextmask = 0x%llx\n", this->nextmask);
+	dprintf(1, "elemmask = 0x%llx\n", this->elemmask);
+	dprintf(1, "valuemask = 0x%llx\n", this->valuemask);
+	dprintf(1, "nextmask = 0x%llx\n", this->nextmask);
 }
 
 HTmanagement::~HTmanagement() {}
@@ -42,7 +42,7 @@ void			HTmanagement::print_table()
 
 bool			HTmanagement::addTable(uint64_t elem, int value)
 {
-	//dprintf(2, "adding %ld of value %d\n", elem, value);
+	//dprintf(1, "adding %ld of value %d\n", elem, value);
 
 	// index is 1111 1222 2233 ... 8888 VVVV VVNN NNNN NNNN NNNN
 	// first 40 bits are for the data, the next 4 are for the value,
@@ -51,12 +51,12 @@ bool			HTmanagement::addTable(uint64_t elem, int value)
 
 	if (value > this->biggestvalue)
 	{
-		dprintf(2, "biggest value is now %d\n", value);
+		dprintf(1, "biggest value is now %d\n", value);
 		this->biggestvalue = value;
 	}
 	if (value >= pow(2.0, VALUESIZE))
 	{
-		dprintf(2, "v bad, the value is bigger than %f (%d/%d)\n",
+		dprintf(1, "v bad, the value is bigger than %f (%d/%d)\n",
 				pow(2.0, VALUESIZE), this->elementsadded, this->elementsexplored);
 		//this->print_table();
 		exit(-1);
@@ -68,51 +68,52 @@ bool			HTmanagement::addTable(uint64_t elem, int value)
 	}
 	else // if there's a hash double
 	{
-		if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem
-				&& ((this->table[hash] >> VALUESHIFT) & this->valuemask) <= value) // in case it the same but worst
-			return (false);
-		if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem
-				&& ((this->table[hash] >> VALUESHIFT) & this->valuemask) > value) // check if this one is better
+		if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem)
 		{
-			this->table[hash] = (elem << ELEMSHIFT) | (value << VALUESHIFT)
-				| (this->table[hash] & this->nextmask);
-			return (true);
+			if (((this->table[hash] >> VALUESHIFT) & this->valuemask) <= value) // in case it the same but worst
+				return (false);
+			else  // if this one is better
+			{
+				this->table[hash] = (elem << ELEMSHIFT) | (value << VALUESHIFT)
+					| (this->table[hash] & this->nextmask);
+				return (true);
+			}
 		}
 		else
 		{
 			while ((this->table[hash] & this->nextmask) != 0) // go through the chain until the last one
 			{
 				hash = (hash + (this->table[hash] & this->nextmask)) % TABLESIZE;
-				if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem
-						&& ((this->table[hash] >> VALUESHIFT) & this->valuemask) >= value)
-					// in case it the same but worst
+				if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem)
+				{
+					if (((this->table[hash] >> VALUESHIFT) & this->valuemask) <= value) // in case it the same but worst
+						return (false);
+					else  // if this one is better
+					{
+						this->table[hash] = (elem << ELEMSHIFT) | (value << VALUESHIFT)
+							| (this->table[hash] & this->nextmask);
+						return (true);
+					}
+				}
+			}
+
+			/*
+			   cout << "new element => " << bitset<ELEMSIZE>(elem) << " " << bitset<VALUESIZE>(value) << "\n";
+			   cout << "otr element => " << bitset<ELEMSIZE>(this->table[hash] >> ELEMSHIFT) << " ";
+			   cout << bitset<VALUESIZE>((this->table[hash] >> VALUESHIFT) & this->valuemask) << " ";
+			   cout << bitset<NEXTSIZE>(this->table[hash] & this->nextmask) << "\n\n";
+			   */
+
+			if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem)
+			{
+				if (((this->table[hash] >> VALUESHIFT) & this->valuemask) <= value) // in case it the same but worst
 					return (false);
-				if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem
-						&& ((this->table[hash] >> VALUESHIFT) & this->valuemask) > value)
-					// check if this one is better
+				else  // if this one is better
 				{
 					this->table[hash] = (elem << ELEMSHIFT) | (value << VALUESHIFT)
 						| (this->table[hash] & this->nextmask);
 					return (true);
 				}
-			}
-
-			/*
-			cout << "new element => " << bitset<ELEMSIZE>(elem) << " " << bitset<VALUESIZE>(value) << "\n";
-			cout << "otr element => " << bitset<ELEMSIZE>(this->table[hash] >> ELEMSHIFT) << " ";
-			cout << bitset<VALUESIZE>((this->table[hash] >> VALUESHIFT) & this->valuemask) << " ";
-			cout << bitset<NEXTSIZE>(this->table[hash] & this->nextmask) << "\n\n";
-			*/
-
-			if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem
-					&& ((this->table[hash] >> VALUESHIFT) & this->valuemask) <= value) // in case it the same but worst
-				return (false);
-			if (((this->table[hash] >> ELEMSHIFT) & this->elemmask) == elem
-					&& ((this->table[hash] >> VALUESHIFT) & this->valuemask) > value) // check if this one is better
-			{
-				this->table[hash] = (elem << ELEMSHIFT) | (value << VALUESHIFT)
-					| (this->table[hash] & this->nextmask);
-				return (true);
 			}
 			//printf("ct pa lmem\n");
 
@@ -121,26 +122,28 @@ bool			HTmanagement::addTable(uint64_t elem, int value)
 			{
 				if ((hash + i) % TABLESIZE == hash)
 				{
-					dprintf(2, "hey not that bad the this->table needs to be bigger (%d)\n",
+					dprintf(1, "hey not that bad the this->table needs to be bigger (%d)\n",
 							this->elementsadded);
 					exit(-1);
 				}
 				++i;
 			}
+			this->table[(hash + i) % TABLESIZE] = (elem << ELEMSHIFT) | (value << VALUESHIFT);
+			this->table[hash] |= i;
+			
 			if (i > this->biggestdistance)
 			{
-				dprintf(2, "biggest distance is now %d (%d/%d added)\n",
+				dprintf(1, "biggest distance is now %d (%d/%d added)\n",
 						i, this->elementsadded, this->elementsexplored);
 				this->biggestdistance = i;
 			}
-			this->table[(hash + i) % TABLESIZE] = (elem << ELEMSHIFT) | (value << VALUESHIFT);
 			if (i > pow(2.0, NEXTSIZE))
 			{
-				dprintf(2, "yo this is bad, they're farther apart than %f in the hash table (%d)\n",
+				dprintf(1, "yo this is bad, they're farther apart than %f in the hash table (%d)\n",
 						pow(2.0, NEXTSIZE), this->elementsadded);
 				exit(-1);
 			}
-			this->table[hash] |= i;
+			
 			return (true);
 		}
 	}
@@ -154,6 +157,8 @@ void			*HTmanagement::writeTree(Rotate r)
 
 	string		*poss_rots = r.get_poss_rot();
 	int			nb_poss_rots = r.get_poss_it() - 1; // -1 because the last entry doesn't work
+
+	printf("tablesize = %d\n", TABLESIZE);
 
 	cube = creator.create_cube();
 	this->to_visit.push(new hash_elem(cube, 0));
@@ -171,23 +176,26 @@ void			*HTmanagement::writeTree(Rotate r)
 		for (int i = 0; i < nb_poss_rots; ++i)
 		{
 			int			*newcube = r.ApplyRotation(poss_rots[i], current->cube);
-			/*
 			   printf("new cube added => ");
 			   cout << bitset<40>(converter.bitToBlockCorner(newcube)) << "\n";
 			   creator.print_cube(newcube);
-			   */
 			this->elementsexplored++;
 			if (addTable(converter.bitToBlockCorner(newcube), current->value + 1) == true)
 			{
+				printf("success ! ^\n");
 				this->to_visit.push(new hash_elem(newcube, current->value + 1)); 
 				this->elementsadded++;
 			}
 			else
+			{
+				printf("nope ^\n");
 				delete newcube;
+			}
+			this->print_table();
 		}
 		delete current;
 	}
-	dprintf(2, "HOLY SHIT\n");
+	dprintf(1, "HOLY SHIT\n");
 
 	FILE* pFile;
 	pFile = fopen("HeuristicData.bits", "wb");

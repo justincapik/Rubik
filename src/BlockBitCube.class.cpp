@@ -255,7 +255,7 @@ block_bits		*BlockBitCube::bitToBlockCube(int *cube)
 	printf("data = %lld\n", data->corners);
 
 	// FOR SIDE CUBIES
-	// 1    2    3    4    5    6    7    8    9    10   11   12   14   15   16
+	// 1    2    3    4    5    6    7    8    9    10   11   12
 	// 1111 2222 3333 4444 5555 6666 7777 8888 9999 ....
 	//            9
 	//         8  R 5
@@ -425,4 +425,57 @@ int		*BlockBitCube::blockToBitCube(block_bits *blocks)
 	cube[WHITE] += ACUBE2(s >> 4);
 
 	return cube;
+}
+
+int		BlockBitCube::manhattanHeuristic(block_bits *blocks)
+{
+	// FOR SIDE CUBIES
+	// 1    2    3    4    5    6    7    8    9    10   11   12
+	// 1111 2222 3333 4444 5555 6666 7777 8888 9999 ....
+	//            9
+	//         8  R 5
+	//            1
+	//
+	//    8       1      5
+	// 12 B 4  4  W 2  2 G 10
+	//    7       3      6
+	//
+	//            3
+	//         7  O 6
+	//            11
+	//
+	//            11
+	//         12 Y 10
+	//            9
+	// direction always leaves from white and goes around clockwise from the top(white)'s pov
+	// faces always go in the order RED/GREEN/ORANGE/BLUE
+	// sides [a][b] a -> index in binary number from pattern above
+	// 				b -> index in sidetable[24]
+	int		sidesvalue[][] = 
+	{
+	//   1  1i 2  2i 3  3i 4  4i  5  5i 6  6i 7  7i 8  8i  9  9i 10 10i11 11i12 12i
+		{0, 3, 1, 2, 2, 3, 1, 3,  2, 1, 3, 2, 2, 3, 1, 2,  3, 2, 2, 3, 3, 4, 2, 3} // WR
+		{1, 2, 0, 3, 1, 2, 2, 2,  1, 2, 2, 1, 3, 2, 2, 3,  2, 3, 3, 2, 2, 3, 3, 4} // WG
+		{2, 3, 1, 2, 0, 3, 1, 2,  2, 3, 1, 2, 2, 1, 3, 2,  3, 4, 2, 3, 3, 2, 2, 3} // WO
+		{1, 2, 2, 3, 1, 3, 0, 3,  3, 2, 2, 3, 1, 2, 2, 1,  2, 3, 3, 4, 2, 3, 3, 2} // WB
+
+		{2, 1, 1, 2, 2, 3, 3, 2,  0, 3, 3, 2, 4, 3, 2, 3,  1, 2, 2, 1, 3, 2, 2, 3} // RG
+		{3, 2, 2, 1, 1, 2, 2, 3,  2, 3, 0, 3, 3, 2, 4, 3,  2, 3, 1, 2, 2, 1, 3, 2} // GO
+		{2, 3, 3, 2, 2, 1, 1, 2,  4, 3, 2, 3, 0, 3, 3, 2,  3, 2, 2, 3, 1, 2, 2, 1} // OB
+		{1, 2, 2, 3, 3, 2, 2, 1,  3, 2, 4, 3, 2, 3, 0, 3,  2, 1, 3, 2, 2, 3, 1, 2} // BR
+		
+		{3, 2, 2, 3, 3, 4, 2, 3,  2, 1, 3, 2, 2, 3, 1, 2,  0, 3, 1, 2, 2, 3, 1, 2} // RY
+		{2, 3, 3, 2, 2, 3, 3, 4,  1, 2, 2, 1, 3, 2, 2, 3,  1, 2, 0, 3, 1, 2, 2, 3} // GY
+		{3, 4, 2, 3, 3, 2, 2, 3,  2, 3, 1, 2, 2, 3, 2, 2,  2, 3, 1, 2, 0, 3, 1, 2} // OY
+		{2, 3, 3, 4, 2, 3, 3, 2,  2, 2, 2, 3, 1, 2, 2, 3,  1, 2, 2, 3, 1, 2, 0, 3} // BY
+	}
+
+	int value = 0;
+	int sides = blocks->sides;
+	for (int i = 0; i < 12; ++i)
+	{
+		value += sides[i][sides & 0x1f];
+		sides >>= 5;
+	}
+	return value;
 }

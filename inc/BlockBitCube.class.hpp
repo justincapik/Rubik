@@ -75,7 +75,8 @@ class BlockBitCube
 		block_bits	*bitToBlockCube(int *cube);
 		uint64_t		bitToBlockCorner(int *cube);
 
-};
+		int			manhattanHeuristic(block_bits *blocks);
 
+};
 
 #endif

@@ -21,11 +21,13 @@ int		main(int argc, char **argv)
 
 	r.AddFunction("U", &(BitCube::Urot));
 	r.AddFunction("U'", &(BitCube::UArot));
+	/*
 	r.AddFunction("R", &(BitCube::Rrot));
 	r.AddFunction("R'", &(BitCube::RArot));
-	/*
+	*/
 	r.AddFunction("D", &(BitCube::Drot));
 	r.AddFunction("D'", &(BitCube::DArot));
+	/*
 	r.AddFunction("F", &(BitCube::Frot));
 	r.AddFunction("F'", &(BitCube::FArot));
 	r.AddFunction("B", &(BitCube::Brot));

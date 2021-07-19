@@ -3,8 +3,8 @@
 
 #include "rubik.hpp"
 
-# define TABLESIZE 95000000
-//# define TABLESIZE 100000
+//# define TABLESIZE 95000000
+# define TABLESIZE 17
 
 # define ELEMSIZE 40
 # define VALUESIZE 5
