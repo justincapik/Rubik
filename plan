@@ -3,11 +3,13 @@ for now:
 		- finish the converter (also to check if the rotations are right) XXXXXX
 		- recheck the rotations XXXXX
 		- finish rotations XXXXXXX
-		- do the heuristic database
+		- do the heuristic database XXX DONESN"T WORK FCIUWNEJVKING ROTATIONS ARE WRONG STILL
 			- hash table
 			- depth search
-		- manhattan for sides?
+		- manhattan for sides? XXXXX DONE BUT MF ROTATIONS
+		//- fix rotations once and for all
 		- ida*
+		- add random stuff to heuristic I guess? aligned is worth more/less
 
 at some point:
 		- use red and black tree for closed list

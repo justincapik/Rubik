@@ -21,20 +21,16 @@ int		main(int argc, char **argv)
 
 	r.AddFunction("U", &(BitCube::Urot));
 	r.AddFunction("U'", &(BitCube::UArot));
-	/*
 	r.AddFunction("R", &(BitCube::Rrot));
 	r.AddFunction("R'", &(BitCube::RArot));
-	*/
 	r.AddFunction("D", &(BitCube::Drot));
 	r.AddFunction("D'", &(BitCube::DArot));
-	/*
 	r.AddFunction("F", &(BitCube::Frot));
 	r.AddFunction("F'", &(BitCube::FArot));
 	r.AddFunction("B", &(BitCube::Brot));
 	r.AddFunction("B'", &(BitCube::BArot));
 	r.AddFunction("L", &(BitCube::Lrot));
 	r.AddFunction("L'", &(BitCube::LArot));
-	*/
 	r.AddFunction("N", &(fnull));
 	//r.ApplyRotation("AH", cube);
 	//r.ApplyRotation("HM", cube);
@@ -78,13 +74,13 @@ int		main(int argc, char **argv)
 	//creator.print_cube(b.blockToBitCube(block_cube));
 	
 
-	/*
 	cube = r.ApplyRotation("L'", cube);
 	printf("L' rotation\n");
 	cube = r.ApplyRotation("B'", cube);
 	printf("B' rotation\n");
 	cube = r.ApplyRotation("B'", cube);
 	printf("F rotation\n");
+	/*
 	cube = r.ApplyRotation("U'", cube);
 	printf("U' rotation\n");
 	cube = r.ApplyRotation("F", cube);
@@ -129,7 +125,6 @@ int		main(int argc, char **argv)
 	   printf("close list test => %d\n", s.closed_list.compare(n2, n1));
 	   */
 
-	/*
 	single_rot *solution = s.solve(cube, r);
 
 	single_rot *cpy = solution;
@@ -140,11 +135,9 @@ int		main(int argc, char **argv)
 		cpy = cpy->last;
 	}
 	printf("}\n");
-	*/
 
-	HTmanagement ht;
-
-	ht.writeTree(r);
+	//HTmanagement ht;
+	//ht.writeTree(r);
 
 	return (0);
 }

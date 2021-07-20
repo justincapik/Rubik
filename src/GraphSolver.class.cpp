@@ -135,10 +135,20 @@ int		GraphSolver::halfManhattanHeuristic(int *cube)
 
 int		GraphSolver::manhattanHeuristic(int *cube)
 {
+	BlockBitCube	b;
+	block_bits		*bcube = b.bitToBlockCube(cube);
+
+	//printf("----\n");
+	int value = b.manhattanHeuristic(bcube);
 	
+	BitCube			creator;
+	//printf("value => %d\n", value);
+	//creator.print_cube(cube);
+	//printf("----\n");
 
+	delete bcube;
 
-	return (0);
+	return (value);
 }
 
 bool		GraphSolver::check_admissible_cube(int *cube, single_rot *current)
@@ -150,14 +160,15 @@ bool		GraphSolver::check_admissible_cube(int *cube, single_rot *current)
 
 single_rot	*GraphSolver::solve(int *cube, Rotate r)
 {
-	BitCube creator;
+	BitCube			creator;
 	single_rot		*current = new single_rot(cube, this->poopManhattanHeuristic(cube), "ORIGINAL", NULL);
 
 	this->open_list.push(current);
 
 	int states = 0;
 
-	while (this->check_solved(current->cube) != true)
+	for (int i = 0; i < 3; ++i)
+	//while (this->check_solved(current->cube) != true)
 	{
 		current = this->open_list.top();
 		this->open_list.pop();
@@ -170,7 +181,7 @@ single_rot	*GraphSolver::solve(int *cube, Rotate r)
 			if (check_admissible_cube(newcube, current))
 			{
 				single_rot	*newrot = new single_rot(newcube,
-						this->poopManhattanHeuristic(newcube), poss_rots[i], current);
+						this->manhattanHeuristic(newcube), poss_rots[i], current);
 				this->open_list.push(newrot);
 			}
 		}
